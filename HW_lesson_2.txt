@@ -1,0 +1,603 @@
+Урок 2. Настройка и знакомство с интерфейсом командной строки
+
+kambeysan@Akano-EZpad:~$ uname
+Linux 
+kambeysan@Akano-EZpad:~$ whoami
+kambeysan
+
+1. Навигация по файловой системе. Попрактиковаться в перемещении между каталогами, используя полный и относительный путь. Перечислить, какие параметры команды cd позволят быстро вернуться в домашний каталог, позволят перейти на уровень выше.
+
+kambeysan@Akano-EZpad:~$ pwd
+/home/kambeysan
+kambeysan@Akano-EZpad:~$ cd /home
+kambeysan@Akano-EZpad:/home$ pwd
+/home
+kambeysan@Akano-EZpad:/home$ cd /
+kambeysan@Akano-EZpad:/$ pwd
+/
+kambeysan@Akano-EZpad:/$ cd /home
+kambeysan@Akano-EZpad:/home$ pwd
+/home
+kambeysan@Akano-EZpad:/home$ cd kambeysan/
+kambeysan@Akano-EZpad:~$ pwd
+/home/kambeysan
+kambeysan@Akano-EZpad:~$ cd .. # подъём на уровень выше!
+kambeysan@Akano-EZpad:/home$ pwd
+/home
+kambeysan@Akano-EZpad:/home$ cd ~ # быстрый возврат в домашний каталог!
+kambeysan@Akano-EZpad:~$ pwd
+/home/kambeysan
+kambeysan@Akano-EZpad:~$ cd - # переход в предыдущую директорию!
+/home
+kambeysan@Akano-EZpad:/home$ pwd
+/home
+kambeysan@Akano-EZpad:/home$ # абсолютный путь cd  начинается с </>:
+kambeysan@Akano-EZpad:/home$ cd /home/kambeysan
+kambeysan@Akano-EZpad:~$ pwd
+/home/kambeysan
+kambeysan@Akano-EZpad:~$ # относительный путь НЕ начинается с </>:
+kambeysan@Akano-EZpad:~$ cd ..
+kambeysan@Akano-EZpad:/home$ pwd
+/home
+kambeysan@Akano-EZpad:/home$ cd kambeysan/
+kambeysan@Akano-EZpad:~$ pwd
+/home/kambeysan
+
+2. Управление файлами и каталогами и текстовые редакторы. Создать файл с наполнением, используя несколько способов. Использовать разобранные текстовые редакторы для наполнения файлов данными. Создать копии созданных файлов, создать несколько каталогов с подкаталогами, перенести несколько файлов в созданные каталоги. Перечислить команды и используемые параметры команд.
+
+Создание рабочих директорий:
+kambeysan@Akano-EZpad:~$ ls
+kambeysan@Akano-EZpad:~$ pwd
+/home/kambeysan
+kambeysan@Akano-EZpad:~$ mkdir Documents
+kambeysan@Akano-EZpad:~$ ls
+Documents
+kambeysan@Akano-EZpad:~$ cd Documents/
+kambeysan@Akano-EZpad:~/Documents$ mkdir GBplay
+kambeysan@Akano-EZpad:~/Documents$ cd GBplay/
+kambeysan@Akano-EZpad:~/Documents/GBplay$ mkdir LinuxWS
+kambeysan@Akano-EZpad:~/Documents/GBplay$ cd LinuxWS/
+kambeysan@Akano-EZpad:~/Documents/GBplay/LinuxWS$ mkdir Homeworks
+kambeysan@Akano-EZpad:~/Documents/GBplay/LinuxWS$ cd Homeworks/
+kambeysan@Akano-EZpad:~/Documents/GBplay/LinuxWS/Homeworks$ mkdir Lesson_02
+kambeysan@Akano-EZpad:~/Documents/GBplay/LinuxWS/Homeworks$ cd Lesson_02/
+kambeysan@Akano-EZpad:~/Documents/GBplay/LinuxWS/Homeworks/Lesson_02$
+kambeysan@Akano-EZpad:~/Documents/GBplay/LinuxWS/Homeworks/Lesson_02$ cd ../../../
+kambeysan@Akano-EZpad:~/Documents/GBplay$ cd ..
+kambeysan@Akano-EZpad:~/Documents$ cd ..
+kambeysan@Akano-EZpad:~$ cd Documents/
+kambeysan@Akano-EZpad:~/Documents$ mkdir GBEducation/LinuxWS/Homeworks/Lesson_02 -p
+kambeysan@Akano-EZpad:~/Documents$ ls
+GBEducation  GBplay
+kambeysan@Akano-EZpad:~/Documents$ tree
+Command 'tree' not found, but can be installed with:
+sudo apt install tree # неудачно! Актуализирую кэш <sudo apt update && sudo apt upgrade -y>
+kambeysan@Akano-EZpad:~$ pwd
+/home/kambeysan
+kambeysan@Akano-EZpad:~$ ls
+Documents
+kambeysan@Akano-EZpad:~$ cd Documents/
+kambeysan@Akano-EZpad:~/Documents$ tree # заработала!
+.
+├── GBEducation
+│   └── LinuxWS
+│       └── Homeworks
+│           └── Lesson_02
+└── GBplay
+    └── LinuxWS
+        └── Homeworks
+            └── Lesson_02
+
+8 directories, 0 files
+
+kambeysan@Akano-EZpad:~/Documents$ # создание файла touch:
+kambeysan@Akano-EZpad:~/Documents$ touch file1.txt
+kambeysan@Akano-EZpad:~/Documents$ ls
+GBEducation  GBplay  file1.txt
+kambeysan@Akano-EZpad:~/Documents$ ls -la
+total 0
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun  8 14:32 .
+drwxr-x--- 1 kambeysan kambeysan 4096 Jun  8 13:02 ..
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun  8 13:00 GBEducation
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun  8 12:36 GBplay
+-rw-r--r-- 1 kambeysan kambeysan    0 Jun  8 14:32 file1.txt
+kambeysan@Akano-EZpad:~/Documents$ # применим touch к уже созданному файлу:
+kambeysan@Akano-EZpad:~/Documents$ touch file1.txt
+kambeysan@Akano-EZpad:~/Documents$ ls -la
+total 0
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun  8 14:32 .
+drwxr-x--- 1 kambeysan kambeysan 4096 Jun  8 13:02 ..
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun  8 13:00 GBEducation
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun  8 12:36 GBplay
+-rw-r--r-- 1 kambeysan kambeysan    0 Jun  8 14:38 file1.txt
+kambeysan@Akano-EZpad:~/Documents$ # данные файла обновились
+
+kambeysan@Akano-EZpad:~/Documents$ # метод echo:
+kambeysan@Akano-EZpad:~/Documents$ echo > file2.txt
+kambeysan@Akano-EZpad:~/Documents$ ll
+total 0
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun  8 14:43 ./
+drwxr-x--- 1 kambeysan kambeysan 4096 Jun  8 13:02 ../
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun  8 13:00 GBEducation/
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun  8 12:36 GBplay/
+-rw-r--r-- 1 kambeysan kambeysan    0 Jun  8 14:38 file1.txt
+-rw-r--r-- 1 kambeysan kambeysan    1 Jun  8 14:43 file2.txt
+
+kambeysan@Akano-EZpad:~/Documents$ # метод создания файла cat:
+kambeysan@Akano-EZpad:~/Documents$ cat >file3.txt
+Мама мыла раму!
+kambeysan@Akano-EZpad:~/Documents$ ll
+total 0
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun  8 14:46 ./
+drwxr-x--- 1 kambeysan kambeysan 4096 Jun  8 13:02 ../
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun  8 13:00 GBEducation/
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun  8 12:36 GBplay/
+-rw-r--r-- 1 kambeysan kambeysan    0 Jun  8 14:38 file1.txt
+-rw-r--r-- 1 kambeysan kambeysan    1 Jun  8 14:43 file2.txt
+-rw-r--r-- 1 kambeysan kambeysan   28 Jun  8 14:46 file3.txt
+
+kambeysan@Akano-EZpad:~/Documents$ # метод '>':
+kambeysan@Akano-EZpad:~/Documents$ > file4.txt
+kambeysan@Akano-EZpad:~/Documents$ ll
+total 0
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun  8 14:51 ./
+drwxr-x--- 1 kambeysan kambeysan 4096 Jun  8 13:02 ../
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun  8 13:00 GBEducation/
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun  8 12:36 GBplay/
+-rw-r--r-- 1 kambeysan kambeysan    0 Jun  8 14:38 file1.txt
+-rw-r--r-- 1 kambeysan kambeysan    1 Jun  8 14:43 file2.txt
+-rw-r--r-- 1 kambeysan kambeysan   28 Jun  8 14:46 file3.txt
+-rw-r--r-- 1 kambeysan kambeysan    0 Jun  8 14:51 file4.txt
+
+Обновлённые данные по созданным диекториям и файлам:
+kambeysan@Akano-EZpad:~/Documents$ tree
+.
+├── GBEducation
+│   └── LinuxWS
+│       └── Homeworks
+│           └── Lesson_02
+├── GBplay
+│   └── LinuxWS
+│       └── Homeworks
+│           └── Lesson_02
+├── file1.txt
+├── file2.txt
+├── file3.txt
+└── file4.txt
+
+8 directories, 4 files
+
+kambeysan@Akano-EZpad:~/Documents$ # копирование:
+kambeysan@Akano-EZpad:~/Documents$ cp file1.txt GBplay
+kambeysan@Akano-EZpad:~/Documents$ tree
+.
+├── GBEducation
+│   └── LinuxWS
+│       └── Homeworks
+│           └── Lesson_02
+├── GBplay
+│   ├── LinuxWS
+│   │   └── Homeworks
+│   │       └── Lesson_02
+│   └── file1.txt
+├── file1.txt
+├── file2.txt
+├── file3.txt
+└── file4.txt
+
+8 directories, 5 files
+
+kambeysan@Akano-EZpad:~/Documents$ cp *.txt GBplay/LinuxWS
+kambeysan@Akano-EZpad:~/Documents$ tree
+.
+├── GBEducation
+│   └── LinuxWS
+│       └── Homeworks
+│           └── Lesson_02
+├── GBplay
+│   ├── LinuxWS
+│   │   ├── Homeworks
+│   │   │   └── Lesson_02
+│   │   ├── file1.txt
+│   │   ├── file2.txt
+│   │   ├── file3.txt
+│   │   └── file4.txt
+│   └── file1.txt
+├── file1.txt
+├── file2.txt
+├── file3.txt
+└── file4.txt
+
+8 directories, 9 files
+
+*Копирование папки Lesson_2 to LinuxWS (НЕ РАБОТАЕТ)
+kambeysan@Akano-EZpad:~/Documents$ cd GBplay/LinuxWS/Homeworks/
+kambeysan@Akano-EZpad:~/Documents/GBplay/LinuxWS/Homeworks$ cp Lesson_02/ GBplay/LinuxWS -r
+cp: cannot create directory 'GBplay/LinuxWS': No such file or directory
+kambeysan@Akano-EZpad:~/Documents/GBplay/LinuxWS/Homeworks$ ll
+total 0
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun  8 12:43 ./
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun  8 15:04 ../
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun  8 12:43 Lesson_02/
+kambeysan@Akano-EZpad:~/Documents/GBplay/LinuxWS/Homeworks$ cp Lesson_02/ GBplay/LinuxWS -r
+cp: cannot create directory 'GBplay/LinuxWS': No such file or directory
+kambeysan@Akano-EZpad:~/Documents/GBplay/LinuxWS/Homeworks$ ll
+total 0
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun  8 12:43 ./
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun  8 15:04 ../
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun  8 12:43 Lesson_02/
+kambeysan@Akano-EZpad:~/Documents/GBplay/LinuxWS/Homeworks$ cp Lesson_02/ GBplay/LinuxWS/ -r
+cp: cannot create directory 'GBplay/LinuxWS/': No such file or directory
+
+*Копирование папки Lesson_2 саму в себя (СРАБОТАЛО, НО КАК-ТО КРИВО!)
+kambeysan@Akano-EZpad:~/Documents$ cd GBplay/LinuxWS/Homeworks/
+kambeysan@Akano-EZpad:~/Documents/GBplay/LinuxWS/Homeworks$ cp -r Lesson_02/ Lesson_02/
+cp: cannot copy a directory, 'Lesson_02/', into itself, 'Lesson_02/Lesson_02'
+kambeysan@Akano-EZpad:~/Documents/GBplay/LinuxWS/Homeworks$ cp -r Lesson_02/ Lesson_02
+cp: cannot copy a directory, 'Lesson_02/', into itself, 'Lesson_02/Lesson_02'
+kambeysan@Akano-EZpad:~/Documents/GBplay/LinuxWS/Homeworks$ ls
+Lesson_02
+kambeysan@Akano-EZpad:~/Documents/GBplay/LinuxWS/Homeworks$ xcp ~/Lesson_2 ~/Documents
+Command 'xcp' not found, but there are 19 similar ones.
+kambeysan@Akano-EZpad:~/Documents/GBplay/LinuxWS/Homeworks$ cp ~/Lesson_2 ~/Documents
+cp: cannot stat '/home/kambeysan/Lesson_2': No such file or directory
+kambeysan@Akano-EZpad:~/Documents/GBplay/LinuxWS/Homeworks$ ls
+Lesson_02
+kambeysan@Akano-EZpad:~/Documents/GBplay/LinuxWS/Homeworks$ ll
+total 0
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun  8 12:43 ./
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun  8 15:04 ../
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun  8 15:52 Lesson_02/
+kambeysan@Akano-EZpad:~/Documents/GBplay/LinuxWS/Homeworks$ cd Lesson_02/
+kambeysan@Akano-EZpad:~/Documents/GBplay/LinuxWS/Homeworks/Lesson_02$ touch lesfile.txt
+kambeysan@Akano-EZpad:~/Documents/GBplay/LinuxWS/Homeworks/Lesson_02$ ll
+total 0
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun  8 15:59 ./
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun  8 12:43 ../
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun  8 15:52 Lesson_02/
+-rw-r--r-- 1 kambeysan kambeysan    0 Jun  8 15:59 lesfile.txt
+kambeysan@Akano-EZpad:~/Documents/GBplay/LinuxWS/Homeworks/Lesson_02$ cd ..
+kambeysan@Akano-EZpad:~/Documents/GBplay/LinuxWS/Homeworks$ ll
+total 0
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun  8 12:43 ./
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun  8 15:04 ../
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun  8 15:59 Lesson_02/
+kambeysan@Akano-EZpad:~/Documents/GBplay/LinuxWS/Homeworks$ cp Lesson_02/* GBplay/
+cp: target 'GBplay/' is not a directory
+kambeysan@Akano-EZpad:~/Documents/GBplay/LinuxWS/Homeworks$ cp Lesson_02/* GBplay
+cp: target 'GBplay' is not a directory
+kambeysan@Akano-EZpad:~/Documents/GBplay/LinuxWS/Homeworks$ cp Lesson_02/* GBplay -a
+cp: target 'GBplay' is not a directory
+kambeysan@Akano-EZpad:~/Documents/GBplay/LinuxWS/Homeworks$ cp Lesson_02/* GBplay -r
+cp: target 'GBplay' is not a directory
+kambeysan@Akano-EZpad:~/Documents/GBplay/LinuxWS/Homeworks$ cd ../../..
+kambeysan@Akano-EZpad:~/Documents$ ll
+total 0
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun  8 14:51 ./
+drwxr-x--- 1 kambeysan kambeysan 4096 Jun  8 13:02 ../
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun  8 13:00 GBEducation/
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun  8 14:59 GBplay/
+-rw-r--r-- 1 kambeysan kambeysan    0 Jun  8 14:38 file1.txt
+-rw-r--r-- 1 kambeysan kambeysan    1 Jun  8 14:43 file2.txt
+-rw-r--r-- 1 kambeysan kambeysan   28 Jun  8 14:46 file3.txt
+-rw-r--r-- 1 kambeysan kambeysan    0 Jun  8 14:51 file4.txt
+kambeysan@Akano-EZpad:~/Documents$ cd GBplay/
+kambeysan@Akano-EZpad:~/Documents/GBplay$ touch torch.txt
+kambeysan@Akano-EZpad:~/Documents/GBplay$ ll
+total 0
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun  8 16:02 ./
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun  8 14:51 ../
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun  8 15:04 LinuxWS/
+-rw-r--r-- 1 kambeysan kambeysan    0 Jun  8 14:59 file1.txt
+-rw-r--r-- 1 kambeysan kambeysan    0 Jun  8 16:02 torch.txt
+kambeysan@Akano-EZpad:~/Documents/GBplay$ cd ..
+kambeysan@Akano-EZpad:~/Documents$ tree
+.
+├── GBEducation
+│   └── LinuxWS
+│       └── Homeworks
+│           └── Lesson_02
+├── GBplay
+│   ├── LinuxWS
+│   │   ├── Homeworks
+│   │   │   └── Lesson_02
+│   │   │       ├── Lesson_02
+│   │   │       │   └── Lesson_02
+│   │   │       └── lesfile.txt
+│   │   ├── file1.txt
+│   │   ├── file2.txt
+│   │   ├── file3.txt
+│   │   └── file4.txt
+│   ├── file1.txt
+│   └── torch.txt
+├── file1.txt
+├── file2.txt
+├── file3.txt
+└── file4.txt
+
+10 directories, 11 files
+
+kambeysan@Akano-EZpad:~/Documents$ # перенос файлов командой mv:
+kambeysan@Akano-EZpad:~/Documents$ cd GBplay/
+kambeysan@Akano-EZpad:~/Documents/GBplay$ mv *.txt LinuxWS/
+kambeysan@Akano-EZpad:~/Documents/GBplay$ cd ..
+kambeysan@Akano-EZpad:~/Documents$ tree
+.
+├── GBEducation
+│   └── LinuxWS
+│       └── Homeworks
+│           └── Lesson_02
+├── GBplay
+│   └── LinuxWS
+│       ├── Homeworks
+│       │   └── Lesson_02
+│       │       ├── Lesson_02
+│       │       └── lesfile.txt
+│       ├── file1.txt
+│       ├── file2.txt
+│       ├── file3.txt
+│       ├── file4.txt
+│       └── torch.txt
+├── file1.txt
+├── file2.txt
+├── file3.txt
+└── file4.txt
+
+9 directories, 10 files
+
+kambeysan@Akano-EZpad:~/Documents/GBplay$ cd ..
+kambeysan@Akano-EZpad:~/Documents$ mkdir Trash
+kambeysan@Akano-EZpad:~/Documents$ ll
+total 0
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun  8 16:39 ./
+drwxr-x--- 1 kambeysan kambeysan 4096 Jun  8 13:02 ../
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun  8 13:00 GBEducation/
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun  8 16:34 GBplay/
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun  8 16:39 Trash/
+-rw-r--r-- 1 kambeysan kambeysan    0 Jun  8 14:38 file1.txt
+-rw-r--r-- 1 kambeysan kambeysan    1 Jun  8 14:43 file2.txt
+-rw-r--r-- 1 kambeysan kambeysan   28 Jun  8 14:46 file3.txt
+-rw-r--r-- 1 kambeysan kambeysan    0 Jun  8 14:51 file4.txt
+kambeysan@Akano-EZpad:~/Documents$ mv *.txt Trash/
+kambeysan@Akano-EZpad:~/Documents$ tree
+.
+├── GBEducation
+│   └── LinuxWS
+│       └── Homeworks
+│           └── Lesson_02
+├── GBplay
+│   └── LinuxWS
+│       ├── Homeworks
+│       │   └── Lesson_02
+│       │       ├── Lesson_02
+│       │       └── lesfile.txt
+│       ├── file1.txt
+│       ├── file2.txt
+│       ├── file3.txt
+│       ├── file4.txt
+│       └── torch.txt
+└── Trash
+    ├── file1.txt
+    ├── file2.txt
+    ├── file3.txt
+    └── file4.txt
+
+10 directories, 10 files
+
+kambeysan@Akano-EZpad:~/Documents$ # перемещение папок командой mv:
+kambeysan@Akano-EZpad:~/Documents$ mv Trash/ GBplay/
+kambeysan@Akano-EZpad:~/Documents$ tree
+.
+├── GBEducation
+│   └── LinuxWS
+│       └── Homeworks
+│           └── Lesson_02
+└── GBplay
+    ├── LinuxWS
+    │   ├── Homeworks
+    │   │   └── Lesson_02
+    │   │       ├── Lesson_02
+    │   │       └── lesfile.txt
+    │   ├── file1.txt
+    │   ├── file2.txt
+    │   ├── file3.txt
+    │   ├── file4.txt
+    │   └── torch.txt
+    └── Trash
+        ├── file1.txt
+        ├── file2.txt
+        ├── file3.txt
+        └── file4.txt
+
+10 directories, 10 files
+
+kambeysan@Akano-EZpad:~/Documents$ # переименование
+kambeysan@Akano-EZpad:~/Documents$ cd GBplay/Trash/
+kambeysan@Akano-EZpad:~/Documents/GBplay/Trash$ mv file1.txt file11.txt
+kambeysan@Akano-EZpad:~/Documents/GBplay/Trash$ ll
+total 0
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun  8 16:50 ./
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun  8 16:45 ../
+-rw-r--r-- 1 kambeysan kambeysan    0 Jun  8 14:38 file11.txt
+-rw-r--r-- 1 kambeysan kambeysan    1 Jun  8 14:43 file2.txt
+-rw-r--r-- 1 kambeysan kambeysan   28 Jun  8 14:46 file3.txt
+-rw-r--r-- 1 kambeysan kambeysan    0 Jun  8 14:51 file4.txt
+
+kambeysan@Akano-EZpad:~/Documents/GBplay/Trash$ # удаление файлов командой rm:
+kambeysan@Akano-EZpad:~/Documents/GBplay$ cd Trash/
+kambeysan@Akano-EZpad:~/Documents/GBplay/Trash$ rm f*
+kambeysan@Akano-EZpad:~/Documents/GBplay/Trash$ ll
+total 0
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun  8 16:56 ./
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun  8 16:45 ../
+
+kambeysan@Akano-EZpad:~/Documents/GBplay/Trash$ # удаление файлов командой rm:
+kambeysan@Akano-EZpad:~/Documents/GBplay$ cd Trash/
+kambeysan@Akano-EZpad:~/Documents/GBplay/Trash$ rm f* # - все файлы, начинающиеся на f
+kambeysan@Akano-EZpad:~/Documents/GBplay/Trash$ ll
+total 0
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun  8 16:56 ./
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun  8 16:45 ../
+kambeysan@Akano-EZpad:~/Documents/GBplay/Trash$ cd ..
+kambeysan@Akano-EZpad:~/Documents/GBplay$ cd LinuxWS/
+kambeysan@Akano-EZpad:~/Documents/GBplay/LinuxWS$ rm *.txt # - все файлы .txt
+kambeysan@Akano-EZpad:~/Documents/GBplay/LinuxWS$ ll
+total 0
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun  8 16:59 ./
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun  8 16:45 ../
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun  8 12:43 Homeworks/
+kambeysan@Akano-EZpad:~/Documents/GBplay/LinuxWS$ cd ../..
+kambeysan@Akano-EZpad:~/Documents$ tree
+.
+├── GBEducation
+│   └── LinuxWS
+│       └── Homeworks
+│           └── Lesson_02
+└── GBplay
+    ├── LinuxWS
+    │   └── Homeworks
+    │       └── Lesson_02
+    │           ├── Lesson_02
+    │           └── lesfile.txt
+    └── Trash
+
+10 directories, 1 file
+
+10 directories, 1 file
+kambeysan@Akano-EZpad:~/Documents$ # удаление директорий
+kambeysan@Akano-EZpad:~/Documents$ rm -r GBplay
+kambeysan@Akano-EZpad:~/Documents$ tree
+.
+└── GBEducation
+    └── LinuxWS
+        └── Homeworks
+            └── Lesson_02
+
+kambeysan@Akano-EZpad:~/Documents$ cd GBEducation/LinuxWS/Homeworks/Lesson_02/
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_02$ # создание файла с наполением командой cat:
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_02$ cat >file1.txt
+Карл у Клары украл кораллы,
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_02$ cat file1.txt
+Карл у Клары украл кораллы,
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_02$
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_02$ # запись в файл командой echo:
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_02$ echo 'а Клара у Карла украла кларнет' >file1.txt
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_02$ cat file1.txt
+а Клара у Карла украла кларнет
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_02$
+
+# Создание файла Task2 и наполнение редактором nano:
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_02$ nano
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_02$ ls
+Task2  file1.txt
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_02$ cat Task2
+2. Управление файлами и каталогами и текстовые редакторы. Создать файл с наполнением, используя несколько способов. Использовать разобoранные текстовые редакторы для наполнения файлов данными. Создать копии созданных файлов, создать несколько каталогов с подкаталогами, перенести несколько файлов в созданные каталоги. Перечислить команды и используемые параметры команд.
+
+# Редактирование файла и запись с новым именем:
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_02$ nano file1.txt
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_02$ ls
+Task2  file1.txt  file2.txt
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_02$ cat file2.txt
+Карл у Клары украл кораллы, а Клара у Карла украла кларнет
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_02$
+
+#Редактирование nano с Backup:
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_02$ nano file1.txt -B
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_02$ ls
+Task2  file1.txt  file1.txt~  file2.txt
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_02$ cat file1.txt
+Карл у Клары украл кораллы, а Клара у Карла украла кларнет. Если бы Карл у Клары не украл кораллы, то Клара у Карла не украла б кларнет )))
+
+# vim:
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_02$ whatis vim
+vim (1)              - Vi IMproved, a programmer's text editor
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_02$ vim file1.txt
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_02$ cat file1.txt
+Карл у Клары украл кораллы, а Клара у Карла украла кларнет. Если бы Карл у Клары не украл кораллы, то Клара у Карла не украла б кларнет )))
+Забавная клептоманская история!
+
+# Создание подриректории и копирование файлов:
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_02$ mkdir Copypast
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_02$ ls
+Copypast  Task2  file1.txt  file1.txt~  file2.txt
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_02$ # копирование файлов в новую директорию Copypast:
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_02$ cp *.txt Copypast/
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_02$ tree
+.
+├── Copypast
+│   ├── file1.txt
+│   └── file2.txt
+├── Task2
+├── file1.txt
+├── file1.txt~
+└── file2.txt
+
+1 directory, 6 files
+
+Используемые команды:
+clear - очистка экрана терминала
+reset - перезагрузка
+pwd - локация
+cd .. - в директорию выше
+cd -  - в предыдущую директорию
+cd ~  - в домашний каталог
+Путь cd через </> - абсолютный, не через </> - относительный
+ls - просмотр содержимого директории
+ls -l  - содержимое в таблице
+ls -a  - +скрытые файлы 
+ll, ls -la/al/-l-a/-a-l - максимально подробное содержимое
+mkdir - создание директорий
+mkdir folder1 folder2 - 2 папки в одной директории
+mkdir folder1/folder2 - папка в папке
+tree - просмотр дерева каталогов и файлов
+touch - новый файл
+echo 'текст' >file1.txt - создание файла и запись текста в него
+cat >file1.txt - создание файла с последующим наполнением (выход и сохранение ctrl+D)
+cp - копирование: cp file folder/
+cp -r - рекурсивное (для директорий)
+mv - перемещение: mv file folder/ или folder1/ folder2/
+   - переименование: mv file1 file11 --> остаётся только file11
+rm - удаление файлов
+rm -r удаление директорий
+
+редкор nano:
+ctrl+X - выход
+ctrl+О - запись
+nano file -B - перезапись с сохранением файла BackUp
+
+редактор vim:
+:q! - выйти без вопросов
+I - режим INSERT
+ESC - выход из режима редактирования
+:w - cохранить
+:q - выход
+:wq - записать+выйти
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
