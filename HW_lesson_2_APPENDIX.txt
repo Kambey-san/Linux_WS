@@ -1,0 +1,69 @@
+3. * Используя дополнительный материал, настроить авторизацию по SSH с использованием ключей.
+
+kambeysan@Akano-EZpad:~$ sudo apt update #вводим перед установкой
+[sudo] password for kambeysan:
+Hit:1 http://archive.ubuntu.com/ubuntu jammy InRelease
+Hit:2 http://archive.ubuntu.com/ubuntu jammy-updates InRelease
+Hit:3 http://archive.ubuntu.com/ubuntu jammy-backports InRelease
+Hit:4 http://security.ubuntu.com/ubuntu jammy-security InRelease
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+All packages are up to date.
+kambeysan@Akano-EZpad:~$ sudo apt update && sudo apt upgrade -y  #обновить кэш
+Hit:1 http://archive.ubuntu.com/ubuntu jammy InRelease
+Hit:2 http://archive.ubuntu.com/ubuntu jammy-updates InRelease
+Hit:3 http://archive.ubuntu.com/ubuntu jammy-backports InRelease
+Hit:4 http://security.ubuntu.com/ubuntu jammy-security InRelease
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+All packages are up to date.
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+Calculating upgrade... Done
+0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+kambeysan@Akano-EZpad:~$ sudo apt install openssh-server -y #установка SSH
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+openssh-server is already the newest version (1:8.9p1-3ubuntu0.1).
+0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+
+#Далее вводим команду запуска для WSL Ubuntu(!) Открывается брандмауэр для разрешений! (аналог команды ~$ sudo systemctl start ssh):
+kambeysan@Akano-EZpad:~$ sudo service ssh start 
+ * Starting OpenBSD Secure Shell server sshd                                                                                                                   [ OK ]
+
+kambeysan@Akano-EZpad:~$ sudo service ssh status #команда статуса для WSL Ubuntu (аналог команды ~$ sudo systemctl status ssh)
+ * sshd is running
+kambeysan@Akano-EZpad:~$ sudo service ssh enable #подключение SSH-сервера. (аналог команды ~$ sudo systemctl enable ssh)
+ * Usage: /etc/init.d/ssh {start|stop|reload|force-reload|restart|try-restart|status}
+kambeysan@Akano-EZpad:~$ hostname -I
+192.168.0.100
+kambeysan@Akano-EZpad:~$
+
+(!)Подключение в putty:
+login as: kambeysan
+kambeysan@192.168.0.100's password:
+Welcome to Ubuntu 22.04.2 LTS (GNU/Linux 4.4.0-22000-Microsoft x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+The programs included with the Ubuntu system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Ubuntu comes with ABSOLUTELY NO WARRANTY, to the extent permitted by
+applicable law.
+
+kambeysan@Akano-EZpad:~$ pwd
+/home/kambeysan
+kambeysan@Akano-EZpad:~$ uname
+Linux
+kambeysan@Akano-EZpad:~$ whoami
+kambeysan
+kambeysan@Akano-EZpad:~$
+kambeysan@Akano-EZpad:~$ ВСЁ РАБОТАЕТ!
