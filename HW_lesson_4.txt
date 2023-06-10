@@ -1,0 +1,211 @@
+Урок 4. Загрузка ОС и процессы
+
+kambeysan@Akano-EZpad:~$ whoami
+kambeysan
+kambeysan@Akano-EZpad:~$ uname
+Linux
+kambeysan@Akano-EZpad:~$ tree
+.
+└── Documents
+    └── GBEducation
+        └── LinuxWS
+            └── Homeworks
+                ├── Lesson_02
+                │   ├── Copypast
+                │   │   ├── file1.txt
+                │   │   └── file2.txt
+                │   ├── Task2
+                │   ├── file1.txt
+                │   ├── file1.txt~
+                │   └── file2.txt
+                ├── Lesson_03
+                └── Lesson_04
+
+8 directories, 6 files
+
+# 1. Потоки ввода/вывода. Создать файл, используя команду echo. Используя команду cat, прочитать содержимое каталога etc, ошибки перенаправить в отдельный файл.
+kambeysan@Akano-EZpad:~$ cd Documents/GBEducation/LinuxWS/Homeworks/Lesson_04
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_04$ echo Урок 4. Загрузка ОС и процессы > HW_lesson_4
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_04$ ls
+HW_lesson_4
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_04$ cat HW_lesson_4
+Урок 4. Загрузка ОС и процессы
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_04$ mv HW_lesson_4 HW_lesson_4.txt
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_04$ la
+HW_lesson_4.txt
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_04$ cat /etc
+cat: /etc: Is a directory
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_04$ cat /etc 2> errors.txt
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_04$ la
+HW_lesson_4.txt  errors.txt
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_04$ cat errors.txt
+cat: /etc: Is a directory
+
+# 2. Конвейер (pipeline). Использовать команду cut на вывод длинного списка каталога, чтобы отобразить только права доступа к файлам. Затем отправить в конвейере этот вывод на sort и uniq, чтобы отфильтровать все повторяющиеся строки.
+
+kambeysan@Akano-EZpad:~$ ll Documents/ | cut -c 1-5
+total
+drwxr
+drwxr
+drwxr
+kambeysan@Akano-EZpad:~$ ll Documents/ | cut -c 1-5 | sort
+drwxr
+drwxr
+drwxr
+total
+kambeysan@Akano-EZpad:~$ ll Documents/ | cut -c 1-5 | sort | uniq
+drwxr
+total
+
+# 3. Управление процессами. Изменить конфигурационный файл службы SSH: /etc/ssh/sshd_config, отключив аутентификацию по паролю PasswordAuthentication no. Выполните рестарт службы systemctl restart sshd (service sshd restart), верните аутентификацию по паролю, выполните reload службы systemctl reload sshd (services sshd reload). В чём различие между действиями restart и reload? Создайте файл при помощи команды cat > file_name, напишите текст и завершите комбинацией ctrl+d. Какой сигнал передадим процессу?
+
+kambeysan@Akano-EZpad:~$ sudo service ssh start
+ * Starting OpenBSD Secure Shell server sshd                                                                                                                     [ OK ]
+kambeysan@Akano-EZpad:~$ sudo service ssh status
+ * sshd is running
+kambeysan@Akano-EZpad:~$ sudo nano /etc/ssh/sshd_config
+UsePAM yes
+
+#AllowAgentForwarding yes
+#AllowTcpForwarding yes
+#GatewayPorts no
+X11Forwarding yes
+#X11DisplayOffset 10
+#X11UseLocalhost yes
+#PermitTTY yes
+PrintMotd no
+#PrintLastLog yes
+#TCPKeepAlive yes
+#PermitUserEnvironment no
+#Compression delayed
+#ClientAliveInterval 0
+#ClientAliveCountMax 3
+#UseDNS no
+#PidFile /run/sshd.pid
+#MaxStartups 10:30:100
+#PermitTunnel no
+#ChrootDirectory none
+#VersionAddendum none
+
+# no default banner path
+#Banner none
+
+# Allow client to pass locale environment variables
+AcceptEnv LANG LC_*
+
+# override default of no subsystems
+Subsystem       sftp    /usr/lib/openssh/sftp-server
+
+# Example of overriding settings on a per-user basis
+#Match User anoncvs
+#       X11Forwarding no
+#       AllowTcpForwarding no
+#       PermitTTY no
+#       ForceCommand cvs server
+PasswordAuthentication no
+
+kambeysan@Akano-EZpad:~$ sudo service ssh reload
+ * Reloading OpenBSD Secure Shell server's configuration sshd
+kambeysan@Akano-EZpad:~$ sudo service ssh status
+ * sshd is running
+kambeysan@Akano-EZpad:~$ pidof -s sshd  # - только PID!
+1055
+kambeysan@Akano-EZpad:~$ sudo nano /etc/ssh/sshd_config
+UsePAM yes
+
+#AllowAgentForwarding yes
+#AllowTcpForwarding yes
+#GatewayPorts no
+X11Forwarding yes
+#X11DisplayOffset 10
+#X11UseLocalhost yes
+#PermitTTY yes
+PrintMotd no
+#PrintLastLog yes
+#TCPKeepAlive yes
+#PermitUserEnvironment no
+#Compression delayed
+#ClientAliveInterval 0
+#ClientAliveCountMax 3
+#UseDNS no
+#PidFile /run/sshd.pid
+#MaxStartups 10:30:100
+#PermitTunnel no
+#ChrootDirectory none
+#VersionAddendum none
+
+# no default banner path
+#Banner none
+
+# Allow client to pass locale environment variables
+AcceptEnv LANG LC_*
+
+# override default of no subsystems
+Subsystem       sftp    /usr/lib/openssh/sftp-server
+
+# Example of overriding settings on a per-user basis
+#Match User anoncvs
+#       X11Forwarding no
+#       AllowTcpForwarding no
+#       PermitTTY no
+#       ForceCommand cvs server
+PasswordAuthentication yes
+
+kambeysan@Akano-EZpad:~$ sudo service ssh restart
+ * Restarting OpenBSD Secure Shell server sshd
+kambeysan@Akano-EZpad:~$ pidof -s sshd
+1218                                   
+# - PID изменился! - оличие restart от reload: при restart процесс останавливается и заново запускается уже с новым PID. При reload файл конфигурации перечитывается, и новые настройки применяются к процессу с текущим PID, который не меняется.
+
+kambeysan@Akano-EZpad:~$ cd Documents/GBEducation/LinuxWS/Homeworks/Lesson_04
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_04$ cat >text.txt
+Мама мыла раму!
+# ctrl+D --> SIGTERM(15)
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_04$ cat text.txt
+Мама мыла раму!
+
+# 4. Сигналы процессам. Запустите mc. Используя ps, найдите PID процесса, завершите процесс, передав ему сигнал 9.
+
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_04$ cd ~
+kambeysan@Akano-EZpad:~$ top -o -PID  # - сортировка PID от начальных значений
+top - 01:57:24 up  4:02,  0 users,  load average: 0.52, 0.58, 0.59
+Tasks:   9 total,   1 running,   8 sleeping,   0 stopped,   0 zombie
+%Cpu(s):  2.3 us,  3.1 sy,  0.0 ni, 94.4 id,  0.0 wa,  0.2 hi,  0.0 si,  0.0 st
+MiB Mem :   5992.2 total,   1766.8 free,   4001.4 used,    224.0 buff/cache
+MiB Swap:  14457.9 total,  14224.4 free,    233.5 used.   1860.1 avail Mem
+
+  PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+    1 root      20   0   10380    676    628 S   0.0   0.0   0:00.38 init(Ubuntu-22.
+    7 root      20   0   10408    712    548 S   0.0   0.0   0:00.19 init
+   17 root      20   0   10380    328    280 S   0.0   0.0   0:00.01 SessionLeader
+   18 kambeys+  20   0   14380   4124   4000 S   0.0   0.1   0:03.93 bash
+ 1030 root      20   0   25036   6632   6424 S   0.0   0.1   0:00.58 sshd
+ 1055 kambeys+  20   0   25292   2780   2288 S   0.0   0.0   0:00.13 sshd
+ 1056 kambeys+  20   0   14244   3812   3612 S   0.0   0.1   0:00.29 bash
+ 1218 root      20   0   23460    956    748 S   0.0   0.0   0:00.01 sshd
+ 1258 kambeys+  20   0   15828   2292   1600 R   0.3   0.0   0:00.08 top
+
+kambeysan@Akano-EZpad:~$ ps aux
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root         1  0.0  0.0  10380   676 ?        Ssl  Jun10   0:00 /init
+root         7  0.0  0.0  10408   712 ?        Sl   Jun10   0:00 plan9 --control-socket 6 --log-level 4 --server-fd 7 --pipe-fd 9 --socket-path /mnt/c/Users/Pc/AppData/
+root        17  0.0  0.0  10380   328 tty1     Ss   Jun10   0:00 /init
+kambeys+    18  0.0  0.0  14380  4124 tty1     S    Jun10   0:04 -bash
+root      1030  0.0  0.1  25036  6632 ?        Ss   Jun10   0:00 sshd: kambeysan [p
+kambeys+  1055  0.0  0.0  25292  2792 ?        S    Jun10   0:00 sshd: kambeysan@pt
+kambeys+  1056  0.0  0.0  14244  3816 pts/0    Ss   Jun10   0:00 -bash
+root      1218  0.0  0.0  23460   956 ?        Ss   00:21   0:00 sshd: /usr/sbin
+kambeys+  4127  0.8  0.0  12456  2360 pts/0    S    02:40   0:00 nano
+kambeys+  4128  0.0  0.0  15520  1948 tty1     R    02:40   0:00 ps aux
+kambeysan@Akano-EZpad:~$ kill -s 9 4127 # - убиваю nano
+kambeysan@Akano-EZpad:~$ ps aux
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root         1  0.0  0.0  10380   676 ?        Ssl  Jun10   0:00 /init
+root         7  0.0  0.0  10408   712 ?        Sl   Jun10   0:00 plan9 --control-socket 6 --log-level 4 --server-fd 7 --pipe-fd 9 --socket-path /mnt/c/Users/Pc/AppData/
+root        17  0.0  0.0  10380   328 tty1     Ss   Jun10   0:00 /init
+kambeys+    18  0.0  0.0  14380  4132 tty1     S    Jun10   0:04 -bash
+root      1030  0.0  0.1  25036  6632 ?        Ss   Jun10   0:00 sshd: kambeysan [p
+kambeys+  1055  0.0  0.0  25292  2792 ?        S    Jun10   0:00 sshd: kambeysan@pt
+kambeys+  1056  0.0  0.0  14244  3824 pts/0    Ss   Jun10   0:00 -bash
+root      1218  0.0  0.0  23460   956 ?        Ss   00:21   0:00 sshd: /usr/sbin
+kambeys+  4129  0.0  0.0  15520  1952 tty1     R    02:42   0:00 ps aux
