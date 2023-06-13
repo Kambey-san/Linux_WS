@@ -1,0 +1,427 @@
+Урок 5. Устройство файловой системы Linux. Понятие Файла и каталога
+
+kambeysan@Akano-EZpad:~$ tree
+.
+└── Documents
+    └── GBEducation
+        └── LinuxWS
+            └── Homeworks
+                ├── Lesson_02
+                │   ├── Copypast
+                │   │   ├── file1.txt
+                │   │   └── file2.txt
+                │   ├── Task2
+                │   ├── file1.txt
+                │   ├── file1.txt~
+                │   └── file2.txt
+                ├── Lesson_03
+                ├── Lesson_04
+                │   ├── HW_lesson_4.txt
+                │   ├── errors.txt
+                │   └── text.txt
+                └── Lesson_05
+                    └── HW_lesson_5.txt
+
+9 directories, 10 files
+kambeysan@Akano-EZpad:~$ cd Documents/GBEducation/LinuxWS/Homeworks/Lesson_05
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_05$
+
+1. Создать файл file1 и наполнить его произвольным содержимым. Скопировать его в file2.
+Создать символическую ссылку file3 на file1. Создать жёсткую ссылку file4 на file1. Посмотреть,
+какие inode у файлов. Удалить file1. Что стало с остальными созданными файлами?
+Попробовать вывести их на экран.
+
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_05$ vim file1	#-создание файла с произвольным содержиимым
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_05$ cat file1	#-просмотр содержимого файла
+Si vis pacem para bellum!
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_05$ ll
+total 0
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun 13 11:50 ./
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun 12 20:00 ../
+-rw-r--r-- 1 kambeysan kambeysan  118 Jun 12 20:03 HW_lesson_5.txt
+-rw-r--r-- 1 kambeysan kambeysan   26 Jun 13 11:50 file1
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_05$ cp file1 file2	#-копирование содержимого file1 to file2
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_05$ ll
+total 0
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun 13 11:53 ./
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun 12 20:00 ../
+-rw-r--r-- 1 kambeysan kambeysan  118 Jun 12 20:03 HW_lesson_5.txt
+-rw-r--r-- 1 kambeysan kambeysan   26 Jun 13 11:50 file1
+-rw-r--r-- 1 kambeysan kambeysan   26 Jun 13 11:53 file2
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_05$ cat file2	#-просмотр содержимого файла. Ok!
+Si vis pacem para bellum!
+
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_05$ ln -s file1 file3	#-создание символической ссылки file3 на file1 
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_05$ ln  file1 file4	#-создание жёсткой  ссылки file4 на file1
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_05$ ll
+total 0
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun 13 12:02 ./
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun 12 20:00 ../
+-rw-r--r-- 1 kambeysan kambeysan  118 Jun 12 20:03 HW_lesson_5.txt
+-rw-r--r-- 2 kambeysan kambeysan   26 Jun 13 11:50 file1
+-rw-r--r-- 1 kambeysan kambeysan   26 Jun 13 11:53 file2
+lrwxrwxrwx 1 kambeysan kambeysan    5 Jun 13 11:59 file3 -> file1
+-rw-r--r-- 2 kambeysan kambeysan   26 Jun 13 11:50 file4
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_05$ ls -il	#- просмотр inode файлов
+total 0
+ 2251799814256708 -rw-r--r-- 1 kambeysan kambeysan 118 Jun 12 20:03 HW_lesson_5.txt
+29836347531447993 -rw-r--r-- 2 kambeysan kambeysan  26 Jun 13 11:50 file1
+53198770598317506 -rw-r--r-- 1 kambeysan kambeysan  26 Jun 13 11:53 file2
+ 6192449487758768 lrwxrwxrwx 1 kambeysan kambeysan   5 Jun 13 11:59 file3 -> file1
+29836347531447993 -rw-r--r-- 2 kambeysan kambeysan  26 Jun 13 11:50 file4
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_05$ rm file1	#- удаляю file1
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_05$ ll
+total 0
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun 13 12:09 ./
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun 12 20:00 ../
+-rw-r--r-- 1 kambeysan kambeysan  118 Jun 12 20:03 HW_lesson_5.txt
+-rw-r--r-- 1 kambeysan kambeysan   26 Jun 13 11:53 file2
+lrwxrwxrwx 1 kambeysan kambeysan    5 Jun 13 11:59 file3 -> file1	#- red color! Символическая ссылка битая!
+-rw-r--r-- 1 kambeysan kambeysan   26 Jun 13 11:50 file4
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_05$ cat file2
+Si vis pacem para bellum!	#- Ok!
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_05$ cat file3
+cat: file3: No such file or directory	#- file1 deleted --> Символическая ссылка сломалась!
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_05$ cat file4
+Si vis pacem para bellum!	#- Ok! при жёсткой ссылке удаление file1 не влияет на содержимое file4!
+
+2. Дать созданным файлам другие, произвольные имена. Создать новую символическую ссылку.
+Переместить ссылки в другую директорию.
+
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_05$ mv file2 file22	#- переименоваие файла
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_05$ mv file4 file44	#- переименоваие файла
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_05$ ll
+total 0
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun 13 12:26 ./
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun 12 20:00 ../
+-rw-r--r-- 1 kambeysan kambeysan  118 Jun 12 20:03 HW_lesson_5.txt
+-rw-r--r-- 1 kambeysan kambeysan   26 Jun 13 11:53 file22
+lrwxrwxrwx 1 kambeysan kambeysan    5 Jun 13 11:59 file3 -> file1	# red color!
+-rw-r--r-- 1 kambeysan kambeysan   26 Jun 13 11:50 file44
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_05$ rm file3	#- удаление файла битой ссылки
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_05$ ll	#- Ok!
+total 0
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun 13 12:27 ./
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun 12 20:00 ../
+-rw-r--r-- 1 kambeysan kambeysan  118 Jun 12 20:03 HW_lesson_5.txt
+-rw-r--r-- 1 kambeysan kambeysan   26 Jun 13 11:53 file22
+-rw-r--r-- 1 kambeysan kambeysan   26 Jun 13 11:50 file44
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_05$ ln -s file22 file22_link	#-создание символической ссылки
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_05$ ln -s file44 file44_link	#-создание символической ссылки
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_05$ ll
+total 0
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun 13 12:32 ./
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun 12 20:00 ../
+-rw-r--r-- 1 kambeysan kambeysan  118 Jun 12 20:03 HW_lesson_5.txt
+-rw-r--r-- 1 kambeysan kambeysan   26 Jun 13 11:53 file22
+lrwxrwxrwx 1 kambeysan kambeysan    6 Jun 13 12:31 file22_link -> file22
+-rw-r--r-- 1 kambeysan kambeysan   26 Jun 13 11:50 file44
+lrwxrwxrwx 1 kambeysan kambeysan    6 Jun 13 12:32 file44_link -> file44
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_05$ mkdir Lesson_links	#- создаю новую директорию
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_05$ mv *link Lesson_links/	# перемещаю линки в Lesson_links
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_05$ ll
+total 0
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun 13 12:44 ./
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun 12 20:00 ../
+-rw-r--r-- 1 kambeysan kambeysan  118 Jun 12 20:03 HW_lesson_5.txt
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun 13 12:44 Lesson_links/
+-rw-r--r-- 1 kambeysan kambeysan   26 Jun 13 11:53 file22
+-rw-r--r-- 1 kambeysan kambeysan   26 Jun 13 11:50 file44
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_05$ cd Lesson_links/	#- перехожу в директорию Lesson_links
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_05/Lesson_links$ ll
+total 0
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun 13 12:44 ./
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun 13 12:44 ../
+lrwxrwxrwx 1 kambeysan kambeysan    6 Jun 13 12:43 file22_link -> file22	#- red color! Ссылка битая!
+lrwxrwxrwx 1 kambeysan kambeysan    6 Jun 13 12:31 file44_link -> file22	#- red color! Ссылка битая!
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_05/Lesson_links$ ln -s /home/kambeysan/Documents/GBEducation/LinuxWS/Homeworks/Lesson_05/file22 file22_newlink
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_05/Lesson_links$ ln -s /home/kambeysan/Documents/GBEducation/LinuxWS/Homeworks/Lesson_05/file44 file44_newlink
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_05/Lesson_links$ ll
+total 0
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun 13 12:56 ./
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun 13 12:44 ../
+lrwxrwxrwx 1 kambeysan kambeysan    6 Jun 13 12:43 file22_link -> file22
+lrwxrwxrwx 1 kambeysan kambeysan   72 Jun 13 12:56 file22_newlink -> /home/kambeysan/Documents/GBEducation/LinuxWS/Homeworks/Lesson_05/file22	#- рабочая ссылка!
+lrwxrwxrwx 1 kambeysan kambeysan    6 Jun 13 12:31 file44_link -> file22
+lrwxrwxrwx 1 kambeysan kambeysan   72 Jun 13 12:56 file44_newlink -> /home/kambeysan/Documents/GBEducation/LinuxWS/Homeworks/Lesson_05/file44	#- рабочая ссылка!
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_05/Lesson_links$ rm *_link	#- приберём мусор!
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_05/Lesson_links$ ll	#- остались только рабочие ссылки!
+total 0
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun 13 13:01 ./
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun 13 12:44 ../
+lrwxrwxrwx 1 kambeysan kambeysan   72 Jun 13 12:56 file22_newlink -> /home/kambeysan/Documents/GBEducation/LinuxWS/Homeworks/Lesson_05/file22
+lrwxrwxrwx 1 kambeysan kambeysan   72 Jun 13 12:56 file44_newlink -> /home/kambeysan/Documents/GBEducation/LinuxWS/Homeworks/Lesson_05/file44
+
+3. Создать два произвольных файла. Первому присвоить права на чтение и запись для
+владельца и группы, только на чтение — для всех. Второму присвоить права на чтение и
+запись только для владельца. Сделать это в численном и символьном виде.
+
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_05$ touch file1 file2	#- cоздать два произвольных файла
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_05$ ll
+total 0
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun 13 13:14 ./
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun 12 20:00 ../
+-rw-r--r-- 1 kambeysan kambeysan  118 Jun 12 20:03 HW_lesson_5.txt
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun 13 13:01 Lesson_links/
+-rw-r--r-- 1 kambeysan kambeysan    0 Jun 13 13:14 file1	#- владелец(rw): чтение, запись; группа(r): чтение; остальные(r): чтение.
+-rw-r--r-- 1 kambeysan kambeysan    0 Jun 13 13:14 file2	#- владелец(rw): чтение, запись; группа(r): чтение; остальные(r): чтение.
+-rw-r--r-- 1 kambeysan kambeysan   26 Jun 13 11:53 file22
+-rw-r--r-- 1 kambeysan kambeysan   26 Jun 13 11:50 file44
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_05$ chmod g+w file1 #- +права на запись группе (символьный вид)
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_05$ ll
+total 0
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun 13 13:14 ./
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun 12 20:00 ../
+-rw-r--r-- 1 kambeysan kambeysan  118 Jun 12 20:03 HW_lesson_5.txt
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun 13 13:01 Lesson_links/
+-rw-rw-r-- 1 kambeysan kambeysan    0 Jun 13 13:14 file1	#- теперь и группа имеет права на запись в file1
+-rw-r--r-- 1 kambeysan kambeysan    0 Jun 13 13:14 file2
+-rw-r--r-- 1 kambeysan kambeysan   26 Jun 13 11:53 file22
+-rw-r--r-- 1 kambeysan kambeysan   26 Jun 13 11:50 file44
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_05$ chmod 600 file2	#- права на чтение и запись только для владельца (численный вид)
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_05$ ll
+total 0
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun 13 13:14 ./
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun 12 20:00 ../
+-rw-r--r-- 1 kambeysan kambeysan  118 Jun 12 20:03 HW_lesson_5.txt
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun 13 13:01 Lesson_links/
+-rw-rw-r-- 1 kambeysan kambeysan    0 Jun 13 13:14 file1
+-rw------- 1 kambeysan kambeysan    0 Jun 13 13:14 file2	#- только владелец имеет права на чтение и запись!
+-rw-r--r-- 1 kambeysan kambeysan   26 Jun 13 11:53 file22
+-rw-r--r-- 1 kambeysan kambeysan   26 Jun 13 11:50 file44
+
+*4. Создать группу developer и нескольких пользователей, входящих в неё. Создать директорию
+для совместной работы. Сделать так, чтобы созданные одними пользователями файлы могли
+изменять другие пользователи этой группы.
+
+kambeysan@Akano-EZpad:~$ pwd
+/home/kambeysan
+kambeysan@Akano-EZpad:~$ cd ..
+kambeysan@Akano-EZpad:/home$ ll
+total 0
+drwxr-xr-x 1 root      root      4096 Jun  9 19:43 ./
+drwxr-xr-x 1 root      root      4096 Jun  7 22:33 ../
+drwxr-x--- 1 kambeysan kambeysan 4096 Jun 13 11:50 kambeysan/
+drwxr-x--- 1 tempuser  tempuser  4096 Jun  9 19:43 user2/
+kambeysan@Akano-EZpad:/home$ sudo adduser user1
+[sudo] password for kambeysan:
+Adding user `user1' ...
+Adding new group `user1' (1002) ...
+Adding new user `user1' (1002) with group `user1' ...
+Creating home directory `/home/user1' ...
+Copying files from `/etc/skel' ...
+New password:
+Retype new password:
+passwd: password updated successfully
+Changing the user information for user1
+Enter the new value, or press ENTER for the default
+        Full Name []:
+        Room Number []:
+        Work Phone []:
+        Home Phone []:
+        Other []:
+Is the information correct? [Y/n] y
+kambeysan@Akano-EZpad:/home$ ll
+total 0
+drwxr-xr-x 1 root      root      4096 Jun 13 14:10 ./
+drwxr-xr-x 1 root      root      4096 Jun  7 22:33 ../
+drwxr-x--- 1 kambeysan kambeysan 4096 Jun 13 11:50 kambeysan/
+drwxr-x--- 1 user1     user1     4096 Jun 13 14:10 user1/
+drwxr-x--- 1 tempuser  tempuser  4096 Jun  9 19:43 user2/	#- этот у меня уже был
+
+kambeysan@Akano-EZpad:~$ sudo addgroup developer	#- cоздать группу developer
+Adding group `developer' (GID 1004) ...
+Done.
+kambeysan@Akano-EZpad:~$ sudo usermod -aG developer user1	#- добавляю в группу developer пользователя user1
+kambeysan@Akano-EZpad:~$ sudo usermod -aG developer user2	#- добавляю в группу developer пользователя user2
+kambeysan@Akano-EZpad:~$ tail /etc/group	#- проверяем...
+uuidd:x:112:
+tcpdump:x:113:
+_ssh:x:114:
+admin:x:115:
+netdev:x:116:kambeysan
+kambeysan:x:1000:
+tempuser:x:1001:
+user1:x:1002:
+user2:x:1003:
+developer:x:1004:user1,user2	#- Ок! пользователи user1 & user2 в группе developer
+user1@Akano-EZpad:/home/kambeysan$ cd ..	#- возвращаюсь в /home для создания общей директории
+kambeysan@Akano-EZpad:/home$ pwd	#- проверка
+/home
+kambeysan@Akano-EZpad:/home$ sudo mkdir developer	#- создаю общую директорию developer/
+kambeysan@Akano-EZpad:/home$ ll    #- проверка
+total 0
+drwxr-xr-x 1 root      root      4096 Jun 13 15:30 ./
+drwxr-xr-x 1 root      root      4096 Jun  7 22:33 ../
+drwxr-xr-x 1 root      root      4096 Jun 13 15:30 developer/	#- Ok! Владелец -root! / Группа -root!
+drwxr-x--- 1 kambeysan kambeysan 4096 Jun 13 15:23 kambeysan/
+drwxr-x--- 1 user1     user1     4096 Jun 13 14:14 user1/
+drwxr-x--- 1 tempuser  tempuser  4096 Jun  9 19:43 user2/
+kambeysan@Akano-EZpad:/home$ sudo chown root:developer /home/developer/    #- меняю группу на developer
+kambeysan@Akano-EZpad:/home$ ll
+total 0
+drwxr-xr-x 1 root      root      4096 Jun 13 15:30 ./
+drwxr-xr-x 1 root      root      4096 Jun  7 22:33 ../
+drwxr-xr-x 1 root      developer 4096 Jun 13 15:30 developer/	#- Ok! Владелец -root! / Группа -developer!
+drwxr-x--- 1 kambeysan kambeysan 4096 Jun 13 15:23 kambeysan/
+drwxr-x--- 1 user1     user1     4096 Jun 13 14:14 user1/
+drwxr-x--- 1 tempuser  tempuser  4096 Jun  9 19:43 user2/
+kambeysan@Akano-EZpad:/home$ sudo chmod 777 /home/developer/	#- даём группе developer права на чтение(r), запись(w), выполнение(x)
+kambeysan@Akano-EZpad:/home$ ll
+total 0
+drwxr-xr-x 1 root      root      4096 Jun 13 15:30 ./
+drwxr-xr-x 1 root      root      4096 Jun  7 22:33 ../
+drwxrwxrwx 1 root      developer 4096 Jun 13 15:30 developer/	#- rwx. Ok!
+drwxr-x--- 1 kambeysan kambeysan 4096 Jun 13 15:23 kambeysan/
+drwxr-x--- 1 user1     user1     4096 Jun 13 14:14 user1/
+drwxr-x--- 1 tempuser  tempuser  4096 Jun  9 19:43 user2/
+kambeysan@Akano-EZpad:/home$ sudo chmod g+s /home/developer/	#- установка SGID!
+kambeysan@Akano-EZpad:/home$ sudo find . -perm /2000	#- проверка установки SGID!
+./developer
+kambeysan@Akano-EZpad:/home$ cd developer/	#- для проверки задания переходим в developer/ 
+kambeysan@Akano-EZpad:/home/developer$ vim trialfile.txt
+kambeysan@Akano-EZpad:/home/developer$ cat trialfile.txt
+Per aster ad astra!
+kambeysan@Akano-EZpad:/home/developer$ ll
+total 0
+drwxrwsrwx 1 root      developer 4096 Jun 13 16:16 ./
+drwxr-xr-x 1 root      root      4096 Jun 13 15:30 ../
+-rw-r--r-- 1 kambeysan developer   20 Jun 13 16:16 trialfile.txt	##- Ok! Владелец -kambeysan! / Группа -developer!
+kambeysan@Akano-EZpad:/home$ su user1	#- переключение на пользователя user1
+Password:
+user1@Akano-EZpad:/home$ whoami
+user1	#- Ok!
+user1@Akano-EZpad:/home$ cd developer/	#- переходим в developer/
+user1@Akano-EZpad:/home/developer$ nano trialfile.txt	#- нет прав доступа (по-видимому, т.к. файл создал kambeysan, который не входит в группу developer)
+user1@Akano-EZpad:/home/developer$ vim trialfile2.txt	#- создаём файл trialfile2.txt от имени user1
+user1@Akano-EZpad:/home/developer$ cat trialfile2.txt
+Dura lex sed lex!
+user1@Akano-EZpad:/home/developer$ su user2	#- перелючение на user2
+Password:
+$ whoami
+user2
+$ vim trialfile2.txt	#- меняю файл от имени user2
+$ exit
+user1@Akano-EZpad:/home/developer$ whoami
+user1
+user1@Akano-EZpad:/home/developer$ cat trialfile2.txt	#- проверка: всё работает для пользователей user1 & user2
+Dura lex sed lex!
+Закон суров, но это закон!
+
+
+5. * Создать в директории для совместной работы поддиректорию для обмена файлами, но
+чтобы удалять файлы могли только их создатели.
+
+#- пересоздал юзеров
+
+kambeysan@Akano-EZpad:~$ tail /etc/passwd
+messagebus:x:102:105::/nonexistent:/usr/sbin/nologin
+systemd-timesync:x:103:106:systemd Time Synchronization,,,:/run/systemd:/usr/sbin/nologin
+syslog:x:104:111::/home/syslog:/usr/sbin/nologin
+_apt:x:105:65534::/nonexistent:/usr/sbin/nologin
+uuidd:x:106:112::/run/uuidd:/usr/sbin/nologin
+tcpdump:x:107:113::/nonexistent:/usr/sbin/nologin
+kambeysan:x:1000:1000:,,,:/home/kambeysan:/bin/bash
+sshd:x:108:65534::/run/sshd:/usr/sbin/nologin
+user1:x:1001:1001:Peter,1,,:/home/user1:/bin/bash
+user2:x:1002:1002:Masha,2,,:/home/user2:/bin/bash
+kambeysan@Akano-EZpad:~$ su user1
+Password:
+user1@Akano-EZpad:/home/kambeysan$ su user2
+Password:
+user2@Akano-EZpad:/home/kambeysan$ su kambeysan
+Password:
+kambeysan@Akano-EZpad:~$ cd ..
+kambeysan@Akano-EZpad:/home$ cd developer/
+kambeysan@Akano-EZpad:/home/developer$ sudo mkdir commonfiles	#- создаю поддиректорию для обмена файлами commonfiles/
+[sudo] password for kambeysan:
+kambeysan@Akano-EZpad:/home/developer$ ll
+total 0
+drwxrwsrwx 1 root developer 4096 Jun 13 19:55 ./
+drwxr-xr-x 1 1003      1003 4096 Jun 13 20:49 ../
+drwxrwxrwx 1 root developer 4096 Jun 13 20:41 commonfiles/
+kambeysan@Akano-EZpad:/home/developer$ cd ..
+kambeysan@Akano-EZpad:/home$ sudo usermod -aG developer user1	#- добавляю в группу developer пользователя user1
+[sudo] password for kambeysan:
+kambeysan@Akano-EZpad:/home$ sudo usermod -aG developer user2	#- добавляю в группу developer пользователя user2
+kambeysan@Akano-EZpad:/home$ su user1	#- переключение на user1
+Password:
+user1@Akano-EZpad:/home$ groups		#- проверка групп user1
+user1 developer
+user1@Akano-EZpad:/home$ su user2	#- переключение на user2
+Password:
+user2@Akano-EZpad:/home$ groups		#- проверка групп user2
+user2 developer
+user2@Akano-EZpad:/home$ su kambeysan	#- переключение на sudoer
+Password:
+kambeysan@Akano-EZpad:/home$ cd developer/	#- переход в developer/
+kambeysan@Akano-EZpad:/home/developer$ sudo chown root:developer commonfiles/	#- даём права группе developer в commonfiles/
+kambeysan@Akano-EZpad:/home/developer$ ll
+total 0
+drwxrwsrwx 1 root developer 4096 Jun 13 19:55 ./
+drwxr-xr-x 1 1003      1003 4096 Jun 13 20:49 ../
+drwxrwxrwx 1 root developer 4096 Jun 13 20:41 commonfiles/
+kambeysan@Akano-EZpad:/home/developer$ sudo chmod ug+rwx commonfiles/	#- добавим прав!
+kambeysan@Akano-EZpad:/home/developer$ sudo chmod +t commonfiles/	#- команда для sticky bit! (файл может удалить только владельц файла или каталога)
+kambeysan@Akano-EZpad:/home/developer$ cd commonfiles/	#- переходим в commonfiles/
+kambeysan@Akano-EZpad:/home/developer/commonfiles$ su user1	#- смена пользователя на user1
+Password:
+user1@Akano-EZpad:/home/developer/commonfiles$ vim fileuser1.txt	#- cоздание файла fileuser1.txt пользователем user1
+user1@Akano-EZpad:/home/developer/commonfiles$ cat fileuser1.txt	#- просмотр файла fileuser1.txt пользователем user1
+In vini veritas!
+user1@Akano-EZpad:/home/developer/commonfiles$ su user2		#- смена пользователя на user2
+Password:
+user2@Akano-EZpad:/home/developer/commonfiles$ cat fileuser1.txt	#- просмотр файла fileuser1.txt пользователем user2
+In vini veritas!
+user2@Akano-EZpad:/home/developer/commonfiles$ vim fileuser2.txt	#- cоздание файла fileuser2.txt пользователем user2
+user2@Akano-EZpad:/home/developer/commonfiles$ cat fileuser2.txt	#- просмотр файла fileuser2.txt пользователем user2
+Истина в вине!
+user2@Akano-EZpad:/home/developer/commonfiles$ su user1		#- смена пользователя на user1
+Password:
+user1@Akano-EZpad:/home/developer/commonfiles$ cat fileuser2.txt	#- просмотр файла fileuser2.txt пользователем user1
+Истина в вине!
+user1@Akano-EZpad:/home/developer/commonfiles$ rm fileuser2.txt		#- попытка удаления файла fileuser2.txt пользователем user1
+rm: remove write-protected regular file 'fileuser2.txt'? yes
+rm: cannot remove 'fileuser2.txt': Operation not permitted
+user1@Akano-EZpad:/home/developer/commonfiles$ rm fileuser1.txt		#- удалениe файла fileuser1.txt пользователем user1(создатель)
+user1@Akano-EZpad:/home/developer/commonfiles$ tree
+.
+└── fileuser2.txt
+
+0 directories, 1 file
+
+6. * Создать директорию, в которой есть несколько файлов. Сделать так, чтобы открыть файлы
+можно было, только зная имя файла, а через ls список файлов посмотреть было нельзя.
+
+kambeysan@Akano-EZpad:~$ cd Documents/GBEducation/LinuxWS/Homeworks/Lesson_05
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_05$ mkdir Limit    #- создаю директорию Limit/
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_05$ ll
+total 0
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun 13 22:36 ./
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun 12 20:00 ../
+-rw-r--r-- 1 kambeysan kambeysan  118 Jun 12 20:03 HW_lesson_5.txt
+drwxr-xr-x 1 kambeysan kambeysan 4096 Jun 13 13:01 Lesson_links/
+drwxrwxr-x 1 kambeysan kambeysan 4096 Jun 13 22:36 Limit/
+-rw-rw-r-- 1 kambeysan kambeysan    0 Jun 13 13:14 file1
+-rw------- 1 kambeysan kambeysan    0 Jun 13 13:14 file2
+-rw-r--r-- 1 kambeysan kambeysan   26 Jun 13 11:53 file22
+-rw-r--r-- 1 kambeysan kambeysan   26 Jun 13 11:50 file44
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_05$ cd Limit/	#- переход в директорию Limit/
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_05/Limit$ vim limit1.txt    #- cоздание файла limit1.txt
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_05/Limit$ vim limit2.txt    #- cоздание файла limit2.txt
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_05/Limit$ ls	#- команда ls работает
+limit1.txt  limit2.txt
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_05/Limit$ cat limit1.txt    #- команда cat работает
+De gustibus non est disputandum!
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_05/Limit$ cat limit2.txt    #- команда cat работает
+О вкусах не спорят!
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_05/Limit$ cd .. #- переход в директорию Lesson_05/
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_05$ sudo chmod ugo-rw Limit/	#- убираем права на чтение-запись для всех
+[sudo] password for kambeysan:
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_05$ sudo chmod ugo+x Limit/	#- добавляем права на исполнение для всех
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_05$ ls Limit/	#- нет прав на команду ls
+ls: cannot open directory 'Limit/': Permission denied
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_05$ cat /home/kambeysan/Documents/GBEducation/LinuxWS/Homeworks/Lesson_05/Limit/limit1.txt
+De gustibus non est disputandum!	#- cat работает по пути к файлу и имени(limit1.txt)!
+kambeysan@Akano-EZpad:~/Documents/GBEducation/LinuxWS/Homeworks/Lesson_05$ cat /home/kambeysan/Documents/GBEducation/LinuxWS/Homeworks/Lesson_05/Limit/limit2.txt
+О вкусах не спорят!	#- cat работает по пути к файлу и имени(limit2.txt)!
