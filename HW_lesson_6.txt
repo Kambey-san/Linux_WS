@@ -1,0 +1,1175 @@
+Урок 6. Введение в скрипты Bash. Планировщики задач crontab и at
+
+1. Написать скрипт, который удаляет из текстового файла пустые строки и заменяет маленькие
+символы на большие. Воспользуйтесь tr или SED.
+
+
+kambeysan@Akano-EZpad:~/Documents/GBEducation/Linux_WS/lesson_06$ cat >file1.txt	#- создаю файл с текстом
+
+1. Написать скрипт, который удаляет из текстового файла
+
+пустые строки и заменяет маленькие
+
+символы на большие. Воспользуйтесь tr или SED.
+
+kambeysan@Akano-EZpad:~/Documents/GBEducation/Linux_WS/lesson_06$ cat >script1.sh	#- создаю скрипт
+#!/bin/bash
+sed '/^#\|^$\| *#/d' ./file1.txt | sed -e 's/\(.*\)/\U\1/'
+kambeysan@Akano-EZpad:~/Documents/GBEducation/Linux_WS/lesson_06$ ll
+total 16
+drwxr-xr-x 2 kambeysan kambeysan 4096 Jun 16 13:03 ./
+drwxr-xr-x 3 kambeysan kambeysan 4096 Jun 16 12:37 ../
+-rw-r--r-- 1 kambeysan kambeysan  246 Jun 16 12:40 file1.txt
+-rw-r--r-- 1 kambeysan kambeysan   69 Jun 16 13:02 script1.sh	#- нет прав на выполнение
+kambeysan@Akano-EZpad:~/Documents/GBEducation/Linux_WS/lesson_06$ sudo chmod +x script1.sh	#- даём права на выполнение
+[sudo] password for kambeysan:
+kambeysan@Akano-EZpad:~/Documents/GBEducation/Linux_WS/lesson_06$ ll
+total 16
+drwxr-xr-x 2 kambeysan kambeysan 4096 Jun 16 13:03 ./
+drwxr-xr-x 3 kambeysan kambeysan 4096 Jun 16 12:37 ../
+-rw-r--r-- 1 kambeysan kambeysan  246 Jun 16 12:40 file1.txt
+-rwxr-xr-x 1 kambeysan kambeysan   69 Jun 16 13:02 script1.sh*		#- права Ок!
+kambeysan@Akano-EZpad:~/Documents/GBEducation/Linux_WS/lesson_06$ ./script1.sh > file1V2.txt	#- выполняем скрипт с записью в новый файл
+kambeysan@Akano-EZpad:~/Documents/GBEducation/Linux_WS/lesson_06$ cat file1V2.txt
+1. НАПИСАТЬ СКРИПТ, КОТОРЫЙ УДАЛЯЕТ ИЗ ТЕКСТОВОГО ФАЙЛА
+ПУСТЫЕ СТРОКИ И ЗАМЕНЯЕТ МАЛЕНЬКИЕ
+СИМВОЛЫ НА БОЛЬШИЕ. ВОСПОЛЬЗУЙТЕСЬ TR ИЛИ SED.
+
+2. Создать однострочный скрипт, который создаст директории для нескольких годов (2010–2017),
+в них — поддиректории для месяцев (от 01 до 12), и в каждый из них запишет несколько
+файлов с произвольными записями. Например, 001.txt, содержащий текст «Файл 001», 002.txt
+с текстом «Файл 002» и т. д.
+
+kambeysan@Akano-EZpad:~/Documents/GBEducation/Linux_WS/lesson_06$ mkdir task_2	#- создаю директорию для задания_2
+kambeysan@Akano-EZpad:~/Documents/GBEducation/Linux_WS/lesson_06$ cd task_2/	#- переход в директорию для задания_2
+kambeysan@Akano-EZpad:~/Documents/GBEducation/Linux_WS/lesson_06/task_2$ nano script2.sh	#- создаю скрипт
+kambeysan@Akano-EZpad:~/Documents/GBEducation/Linux_WS/lesson_06/task_2$ cat script2.sh
+#!/bin/bash
+
+mkdir -p 20{10..17}/{01..12}
+for year in {2010..2017}
+do
+    for month in {01..12}
+    do
+        for file in {001..005}
+        do
+            echo Файл $file > $year/$month/$file.txt
+        done
+    done
+done
+
+kambeysan@Akano-EZpad:~/Documents/GBEducation/Linux_WS/lesson_06/task_2$ sudo chmod +x script2.sh	#- даём права на выполнение
+[sudo] password for kambeysan:
+kambeysan@Akano-EZpad:~/Documents/GBEducation/Linux_WS/lesson_06/task_2$ ll
+total 12
+drwxr-xr-x 2 kambeysan kambeysan 4096 Jun 16 14:12 ./
+drwxr-xr-x 3 kambeysan kambeysan 4096 Jun 16 14:10 ../
+-rwxr-xr-x 1 kambeysan kambeysan  229 Jun 16 14:12 script2.sh*		#- права Ок!
+kambeysan@Akano-EZpad:~/Documents/GBEducation/Linux_WS/lesson_06/task_2$ ./script2.sh	#- выполняем скрипт
+kambeysan@Akano-EZpad:~/Documents/GBEducation/Linux_WS/lesson_06/task_2$ tree	# проверка содержания директории
+.
+├── 2010
+│   ├── 01
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 02
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 03
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 04
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 05
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 06
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 07
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 08
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 09
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 10
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 11
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   └── 12
+│       ├── 001.txt
+│       ├── 002.txt
+│       ├── 003.txt
+│       ├── 004.txt
+│       └── 005.txt
+├── 2011
+│   ├── 01
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 02
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 03
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 04
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 05
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 06
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 07
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 08
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 09
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 10
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 11
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   └── 12
+│       ├── 001.txt
+│       ├── 002.txt
+│       ├── 003.txt
+│       ├── 004.txt
+│       └── 005.txt
+├── 2012
+│   ├── 01
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 02
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 03
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 04
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 05
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 06
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 07
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 08
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 09
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 10
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 11
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   └── 12
+│       ├── 001.txt
+│       ├── 002.txt
+│       ├── 003.txt
+│       ├── 004.txt
+│       └── 005.txt
+├── 2013
+│   ├── 01
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 02
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 03
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 04
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 05
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 06
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 07
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 08
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 09
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 10
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 11
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   └── 12
+│       ├── 001.txt
+│       ├── 002.txt
+│       ├── 003.txt
+│       ├── 004.txt
+│       └── 005.txt
+├── 2014
+│   ├── 01
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 02
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 03
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 04
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 05
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 06
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 07
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 08
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 09
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 10
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 11
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   └── 12
+│       ├── 001.txt
+│       ├── 002.txt
+│       ├── 003.txt
+│       ├── 004.txt
+│       └── 005.txt
+├── 2015
+│   ├── 01
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 02
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 03
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 04
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 05
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 06
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 07
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 08
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 09
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 10
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 11
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   └── 12
+│       ├── 001.txt
+│       ├── 002.txt
+│       ├── 003.txt
+│       ├── 004.txt
+│       └── 005.txt
+├── 2016
+│   ├── 01
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 02
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 03
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 04
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 05
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 06
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 07
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 08
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 09
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 10
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 11
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   └── 12
+│       ├── 001.txt
+│       ├── 002.txt
+│       ├── 003.txt
+│       ├── 004.txt
+│       └── 005.txt
+├── 2017
+│   ├── 01
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 02
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 03
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 04
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 05
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 06
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 07
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 08
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 09
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 10
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   ├── 11
+│   │   ├── 001.txt
+│   │   ├── 002.txt
+│   │   ├── 003.txt
+│   │   ├── 004.txt
+│   │   └── 005.txt
+│   └── 12
+│       ├── 001.txt
+│       ├── 002.txt
+│       ├── 003.txt
+│       ├── 004.txt
+│       └── 005.txt
+└── script2.sh
+
+104 directories, 481 files
+kambeysan@Akano-EZpad:~/Documents/GBEducation/Linux_WS/lesson_06/task_2$ cat 2010/01/001.txt	#- выборочная проверка содержания. Ок!
+Файл 001
+kambeysan@Akano-EZpad:~/Documents/GBEducation/Linux_WS/lesson_06/task_2$ cat 2012/05/003.txt	#- выборочная проверка содержания. Ок!
+Файл 003
+
+3. *Использовать команду AWK на вывод длинного списка каталога, чтобы отобразить только
+права доступа к файлам. Затем отправить в конвейере этот вывод на sort и uniq, чтобы
+отфильтровать все повторяющиеся строки.
+
+kambeysan@Akano-EZpad:~/Documents/GBEducation/Linux_WS/lesson_06$ ll /etc | awk '{print $1}'	#- вывод 1го столбца (с правами доступа)
+total
+drwxr-xr-x
+drwxr-xr-x
+-rw-------
+drwxr-xr-x
+drwxr-xr-x
+-rw-r--r--
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+-rw-r--r--
+-rw-r--r--
+drwxr-xr-x
+-rw-r--r--
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+-rw-r--r--
+-rw-r--r--
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+-rw-r--r--
+drwxr-xr-x
+-rw-r--r--
+-rw-r--r--
+drwxr-xr-x
+-rw-r--r--
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+drwxr-xr-x
+-rw-r--r--
+-rw-r--r--
+-rw-r-----
+-rw-r-----
+drwxr-xr-x
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+drwxr-xr-x
+-rw-r--r--
+drwxr-xr-x
+-rw-r--r--
+-rw-r--r--
+drwxr-xr-x
+-rw-r--r--
+-rw-r--r--
+drwxr-xr-x
+drwxr-xr-x
+-rw-r--r--
+-rw-r--r--
+drwxr-xr-x
+-rw-r--r--
+-rw-r--r--
+lrwxrwxrwx
+drwxr-xr-x
+-rw-r--r--
+-rw-r--r--
+drwxr-xr-x
+-rw-r--r--
+-r--r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+drwxr-xr-x
+-rw-r--r--
+-rw-r--r--
+drwxr-xr-x
+-rw-r--r--
+drwxr-xr-x
+lrwxrwxrwx
+-rw-r--r--
+-rw-r--r--
+drwxr-xr-x
+drwxr-xr-x
+-rw-r--r--
+drwxr-xr-x
+-rwxr-xr-x
+-rw-r--r--
+drwxr-xr-x
+lrwxrwxrwx
+-rw-r--r--
+drwxr-xr-x
+-rw-r--r--
+-rw-r--r--
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+-rw-r--r--
+drwxr-xr-x
+-rw-r--r--
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+lrwxrwxrwx
+lrwxrwxrwx
+-rw-r--r--
+-rw-r--r--
+drwxr-xr-x
+-rw-r--r--
+drwxr-xr-x
+drwxr-xr-x
+-rw-r--r--
+-rw-r-----
+-rw-r-----
+-rw-r--r--
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-r--r-----
+drwxr-xr-x
+-rw-r--r--
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+-rw-r--r--
+drwxr-xr-x
+drwxr-xr-x
+-rw-r--r--
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+lrwxrwxrwx
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+drwxr-xr-x
+-rw-r--r--
+
+kambeysan@Akano-EZpad:~/Documents/GBEducation/Linux_WS/lesson_06$ ll /etc | awk '{print $1}' | sort	#- сортировка (sort)
+-r--r-----
+-r--r--r--
+-rw-------
+-rw-r-----
+-rw-r-----
+-rw-r-----
+-rw-r-----
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+-rwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+lrwxrwxrwx
+lrwxrwxrwx
+lrwxrwxrwx
+lrwxrwxrwx
+lrwxrwxrwx
+lrwxrwxrwx
+total
+
+kambeysan@Akano-EZpad:~/Documents/GBEducation/Linux_WS/lesson_06$ ll /etc | awk '{print $1}' | sort | uniq	#- только уникальные значения (uniq)
+-r--r-----
+-r--r--r--
+-rw-------
+-rw-r-----
+-rw-r--r--
+-rwxr-xr-x
+drwxr-xr-x
+lrwxrwxrwx
+total
+
+4. Используя grep, проанализировать файл /var/log/syslog, отобрав события на своё усмотрение.
+kambeysan@Akano-EZpad:~/Documents/GBEducation/Linux_WS/lesson_06$ sudo cat /var/log/syslog | grep WSL2		#- фльтр по WSL2
+Jun 15 10:21:23 Akano-EZpad kernel: [    0.000000] Linux version 5.15.90.1-microsoft-standard-WSL2 (oe-user@oe-host) (x86_64-msft-linux-gcc (GCC) 9.3.0, GNU ld (GNU Binutils) 2.34.0.20200220) #1 SMP Fri Jan 27 02:56:13 UTC 2023
+Jun 15 10:21:23 Akano-EZpad kernel: [    2.173657] usb usb1: Manufacturer: Linux 5.15.90.1-microsoft-standard-WSL2 vhci_hcd
+Jun 15 10:21:23 Akano-EZpad kernel: [    2.188590] usb usb2: Manufacturer: Linux 5.15.90.1-microsoft-standard-WSL2 vhci_hcd
+Jun 15 10:26:50 Akano-EZpad kernel: [    0.000000] Linux version 5.15.90.1-microsoft-standard-WSL2 (oe-user@oe-host) (x86_64-msft-linux-gcc (GCC) 9.3.0, GNU ld (GNU Binutils) 2.34.0.20200220) #1 SMP Fri Jan 27 02:56:13 UTC 2023
+Jun 15 10:26:50 Akano-EZpad kernel: [    1.009193] usb usb1: Manufacturer: Linux 5.15.90.1-microsoft-standard-WSL2 vhci_hcd
+Jun 15 10:26:50 Akano-EZpad kernel: [    1.023796] usb usb2: Manufacturer: Linux 5.15.90.1-microsoft-standard-WSL2 vhci_hcd
+Jun 15 10:31:41 Akano-EZpad python3[456]: Failed to parse kernel: 5.15.90.1-microsoft-standard-WSL2
+Jun 15 11:05:46 Akano-EZpad python3[3137]: Failed to parse kernel: 5.15.90.1-microsoft-standard-WSL2
+Jun 15 11:26:23 Akano-EZpad kernel: [    0.000000] Linux version 5.15.90.1-microsoft-standard-WSL2 (oe-user@oe-host) (x86_64-msft-linux-gcc (GCC) 9.3.0, GNU ld (GNU Binutils) 2.34.0.20200220) #1 SMP Fri Jan 27 02:56:13 UTC 2023
+Jun 15 11:26:23 Akano-EZpad kernel: [    1.065133] usb usb1: Manufacturer: Linux 5.15.90.1-microsoft-standard-WSL2 vhci_hcd
+Jun 15 11:26:23 Akano-EZpad kernel: [    1.083659] usb usb2: Manufacturer: Linux 5.15.90.1-microsoft-standard-WSL2 vhci_hcd
+Jun 15 11:30:10 Akano-EZpad kernel: [    0.000000] Linux version 5.15.90.1-microsoft-standard-WSL2 (oe-user@oe-host) (x86_64-msft-linux-gcc (GCC) 9.3.0, GNU ld (GNU Binutils) 2.34.0.20200220) #1 SMP Fri Jan 27 02:56:13 UTC 2023
+Jun 15 11:30:10 Akano-EZpad kernel: [    1.031459] usb usb1: Manufacturer: Linux 5.15.90.1-microsoft-standard-WSL2 vhci_hcd
+Jun 15 11:30:10 Akano-EZpad kernel: [    1.048280] usb usb2: Manufacturer: Linux 5.15.90.1-microsoft-standard-WSL2 vhci_hcd
+Jun 15 11:30:28 Akano-EZpad python3[489]: Failed to parse kernel: 5.15.90.1-microsoft-standard-WSL2
+Jun 15 12:05:17 Akano-EZpad kernel: [    0.000000] Linux version 5.15.90.1-microsoft-standard-WSL2 (oe-user@oe-host) (x86_64-msft-linux-gcc (GCC) 9.3.0, GNU ld (GNU Binutils) 2.34.0.20200220) #1 SMP Fri Jan 27 02:56:13 UTC 2023
+Jun 15 12:05:17 Akano-EZpad kernel: [    1.614177] usb usb1: Manufacturer: Linux 5.15.90.1-microsoft-standard-WSL2 vhci_hcd
+Jun 15 12:05:17 Akano-EZpad kernel: [    1.635940] usb usb2: Manufacturer: Linux 5.15.90.1-microsoft-standard-WSL2 vhci_hcd
+Jun 15 12:09:01 Akano-EZpad kernel: [    0.000000] Linux version 5.15.90.1-microsoft-standard-WSL2 (oe-user@oe-host) (x86_64-msft-linux-gcc (GCC) 9.3.0, GNU ld (GNU Binutils) 2.34.0.20200220) #1 SMP Fri Jan 27 02:56:13 UTC 2023
+Jun 15 12:09:01 Akano-EZpad kernel: [    1.022513] usb usb1: Manufacturer: Linux 5.15.90.1-microsoft-standard-WSL2 vhci_hcd
+Jun 15 12:09:01 Akano-EZpad kernel: [    1.039755] usb usb2: Manufacturer: Linux 5.15.90.1-microsoft-standard-WSL2 vhci_hcd
+Jun 15 12:16:08 Akano-EZpad kernel: [    0.000000] Linux version 5.15.90.1-microsoft-standard-WSL2 (oe-user@oe-host) (x86_64-msft-linux-gcc (GCC) 9.3.0, GNU ld (GNU Binutils) 2.34.0.20200220) #1 SMP Fri Jan 27 02:56:13 UTC 2023
+Jun 15 12:16:08 Akano-EZpad kernel: [    1.003599] usb usb1: Manufacturer: Linux 5.15.90.1-microsoft-standard-WSL2 vhci_hcd
+Jun 15 12:16:08 Akano-EZpad kernel: [    1.022457] usb usb2: Manufacturer: Linux 5.15.90.1-microsoft-standard-WSL2 vhci_hcd
+Jun 15 12:20:53 Akano-EZpad python3[484]: Failed to parse kernel: 5.15.90.1-microsoft-standard-WSL2
+Jun 15 12:21:54 Akano-EZpad python3[843]: Failed to parse kernel: 5.15.90.1-microsoft-standard-WSL2
+Jun 16 12:32:38 Akano-EZpad kernel: [    0.000000] Linux version 5.15.90.1-microsoft-standard-WSL2 (oe-user@oe-host) (x86_64-msft-linux-gcc (GCC) 9.3.0, GNU ld (GNU Binutils) 2.34.0.20200220) #1 SMP Fri Jan 27 02:56:13 UTC 2023
+Jun 16 12:32:38 Akano-EZpad kernel: [    1.365431] usb usb1: Manufacturer: Linux 5.15.90.1-microsoft-standard-WSL2 vhci_hcd
+Jun 16 12:32:38 Akano-EZpad kernel: [    1.386865] usb usb2: Manufacturer: Linux 5.15.90.1-microsoft-standard-WSL2 vhci_hcd
+
+kambeysan@Akano-EZpad:~/Documents/GBEducation/Linux_WS/lesson_06$ sudo cat /var/log/syslog | grep 12:45		#- фильтр по времени (12:45)
+Jun 16 12:45:14 Akano-EZpad subiquity_event.1028[1028]: subiquity/Early/apply_autoinstall_config
+Jun 16 12:45:14 Akano-EZpad subiquity_event.1028[1028]: subiquity/Early/apply_autoinstall_config
+Jun 16 12:45:14 Akano-EZpad subiquity_event.1028[1028]: subiquity/Reporting/apply_autoinstall_config
+Jun 16 12:45:14 Akano-EZpad subiquity_event.1028[1028]: subiquity/Reporting/apply_autoinstall_config
+Jun 16 12:45:14 Akano-EZpad subiquity_event.1028[1028]: subiquity/Error/apply_autoinstall_config
+Jun 16 12:45:14 Akano-EZpad subiquity_event.1028[1028]: subiquity/Error/apply_autoinstall_config
+Jun 16 12:45:14 Akano-EZpad subiquity_event.1028[1028]: subiquity/Userdata/apply_autoinstall_config
+Jun 16 12:45:14 Akano-EZpad subiquity_event.1028[1028]: subiquity/Userdata/apply_autoinstall_config
+Jun 16 12:45:14 Akano-EZpad subiquity_event.1028[1028]: subiquity/Package/apply_autoinstall_config
+Jun 16 12:45:14 Akano-EZpad subiquity_event.1028[1028]: subiquity/Package/apply_autoinstall_config
+Jun 16 12:45:14 Akano-EZpad subiquity_event.1028[1028]: subiquity/Debconf/apply_autoinstall_config
+Jun 16 12:45:14 Akano-EZpad subiquity_event.1028[1028]: subiquity/Debconf/apply_autoinstall_config
+Jun 16 12:45:14 Akano-EZpad subiquity_event.1028[1028]: subiquity/Kernel/apply_autoinstall_config
+Jun 16 12:45:14 Akano-EZpad subiquity_event.1028[1028]: subiquity/Kernel/apply_autoinstall_config
+Jun 16 12:45:14 Akano-EZpad subiquity_event.1028[1028]: subiquity/Zdev/apply_autoinstall_config
+Jun 16 12:45:14 Akano-EZpad subiquity_event.1028[1028]: subiquity/Zdev/apply_autoinstall_config
+Jun 16 12:45:14 Akano-EZpad subiquity_event.1028[1028]: subiquity/Ad/apply_autoinstall_config
+Jun 16 12:45:14 Akano-EZpad subiquity_event.1028[1028]: subiquity/Ad/apply_autoinstall_config
+Jun 16 12:45:14 Akano-EZpad subiquity_event.1028[1028]: subiquity/Late/apply_autoinstall_config
+Jun 16 12:45:14 Akano-EZpad subiquity_event.1028[1028]: subiquity/Late/apply_autoinstall_config
+Jun 16 12:45:16 Akano-EZpad snapd[595]: storehelpers.go:769: cannot refresh: snap has no updates available: "bare", "core20", "core22", "firefox", "gnome-3-38-2004", "gtk-common-themes", "snapd", "ubuntu-desktop-installer"
+
+5. Создать разовое задание на перезагрузку операционной системы, используя at.
+
+kambeysan@Akano-EZpad:~/Documents/GBEducation/Linux_WS/lesson_06$ sudo apt install at	#- установить утилиту (at: command not found)
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+Suggested packages:
+  default-mta | mail-transport-agent
+The following NEW packages will be installed:
+  at
+0 upgraded, 1 newly installed, 0 to remove and 2 not upgraded.
+Need to get 41.1 kB of archives.
+After this operation, 166 kB of additional disk space will be used.
+Get:1 http://archive.ubuntu.com/ubuntu jammy/universe amd64 at amd64 3.2.5-1ubuntu1 [41.1 kB]
+Fetched 41.1 kB in 1s (79.4 kB/s)
+Selecting previously unselected package at.
+(Reading database ... 27499 files and directories currently installed.)
+Preparing to unpack .../at_3.2.5-1ubuntu1_amd64.deb ...
+Unpacking at (3.2.5-1ubuntu1) ...
+Setting up at (3.2.5-1ubuntu1) ...
+Created symlink /etc/systemd/system/multi-user.target.wants/atd.service → /lib/systemd/system/atd.service.
+Processing triggers for man-db (2.10.2-1) ...
+kambeysan@Akano-EZpad:~/Documents/GBEducation/Linux_WS/lesson_06$ sudo at 15:45		#-выполение команды в 15:45
+warning: commands will be executed using /bin/sh
+at Fri Jun 16 15:45:00 2023
+at> sudo reboot	#- команда на перезагрузку
+at> <EOT>
+job 1 at Fri Jun 16 15:45:00 2023
+
+kambeysan@Akano-EZpad:~/Documents/GBEducation/Linux_WS/lesson_06$
+
+[процесс завершил работу с кодом 1 (0x00000001)]
+Теперь вы можете закрыть этот терминал с помощью клавиш CTRL+D. Или нажмите клавишу ВВОД для перезапуска.
+
+6. *Написать скрипт, делающий архивную копию каталога etc, и прописать задание в crontab.
+
+kambeysan@Akano-EZpad:~$ pwd
+/home/kambeysan
+kambeysan@Akano-EZpad:~$ cd Documents/GBEducation/Linux_WS/lesson_06/
+kambeysan@Akano-EZpad:~/Documents/GBEducation/Linux_WS/lesson_06$ mkdir BackUp	#- создаю директрию для BackUp
+kambeysan@Akano-EZpad:~/Documents/GBEducation/Linux_WS/lesson_06$ ll
+total 28
+drwxr-xr-x  4 kambeysan kambeysan 4096 Jun 16 15:58 ./
+drwxr-xr-x  3 kambeysan kambeysan 4096 Jun 16 12:37 ../
+drwxr-xr-x  2 kambeysan kambeysan 4096 Jun 16 15:58 BackUp/	#- Ok!
+-rw-r--r--  1 kambeysan kambeysan    0 Jun 16 13:50 depts
+-rw-r--r--  1 kambeysan kambeysan  248 Jun 16 13:14 file1.txt
+-rw-r--r--  1 kambeysan kambeysan  246 Jun 16 13:16 file1V2.txt
+-rwxr-xr-x  1 kambeysan kambeysan   71 Jun 16 13:11 script1.sh*
+drwxr-xr-x 10 kambeysan kambeysan 4096 Jun 16 14:18 task_2/
+kambeysan@Akano-EZpad:~/Documents/GBEducation/Linux_WS/lesson_06$ cat >script_bkp.sh	#- создаю скрипт
+#!/bin/bash
+rsync -avz etc/ ~/lesson_06/BackUp
+
+kambeysan@Akano-EZpad:~/Documents/GBEducation/Linux_WS/lesson_06$ sudo chmod +x script_bkp.sh	#- скрипт на выполнение
+[sudo] password for kambeysan:
+kambeysan@Akano-EZpad:~/Documents/GBEducation/Linux_WS/lesson_06$ ll
+total 32
+drwxr-xr-x  4 kambeysan kambeysan 4096 Jun 16 16:01 ./
+drwxr-xr-x  3 kambeysan kambeysan 4096 Jun 16 12:37 ../
+drwxr-xr-x  2 kambeysan kambeysan 4096 Jun 16 15:58 BackUp/
+-rw-r--r--  1 kambeysan kambeysan    0 Jun 16 13:50 depts
+-rw-r--r--  1 kambeysan kambeysan  248 Jun 16 13:14 file1.txt
+-rw-r--r--  1 kambeysan kambeysan  246 Jun 16 13:16 file1V2.txt
+-rwxr-xr-x  1 kambeysan kambeysan   71 Jun 16 13:11 script1.sh*
+-rwxr-xr-x  1 kambeysan kambeysan   46 Jun 16 16:05 script_bkp.sh*	#- выполение ОК!
+drwxr-xr-x 10 kambeysan kambeysan 4096 Jun 16 14:18 task_2/
+
+kambeysan@Akano-EZpad:~/Documents/GBEducation/Linux_WS/lesson_06$ cd ~
+kambeysan@Akano-EZpad:~$ sudo apt install cron	#- вроде ОК!..
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+cron is already the newest version (3.0pl1-137ubuntu3).
+cron set to manually installed.
+0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+kambeysan@Akano-EZpad:~$ sudo service cron start	#- запусить cron принудительно
+kambeysan@Akano-EZpad:~$ pwd
+/home/kambeysan
+kambeysan@Akano-EZpad:~$ cd Documents/GBEducation/Linux_WS/lesson_06/BackUp/
+kambeysan@Akano-EZpad:~/Documents/GBEducation/Linux_WS/lesson_06/BackUp$ ll
+total 8
+drwxr-xr-x 2 kambeysan kambeysan 4096 Jun 16 15:58 ./
+drwxr-xr-x 4 kambeysan kambeysan 4096 Jun 16 16:01 ../
+
+kambeysan@Akano-EZpad:~/Documents/GBEducation/Linux_WS/lesson_06/BackUp$ crontab -e
+crontab: installing new crontab
+
+ Edit this file to introduce tasks to be run by cron.
+#
+# Each task to run has to be defined through a single line
+# indicating with different fields when the task will be run
+# and what command to run for the task
+#
+# To define the time you can provide concrete values for
+# minute (m), hour (h), day of month (dom), month (mon),
+# and day of week (dow) or use '*' in these fields (for 'any').
+#
+# Notice that tasks will be started based on the cron's system
+# daemon's notion of time and timezones.
+#
+# Output of the crontab jobs (including errors) is sent through
+# email to the user the crontab file belongs to (unless redirected).
+#
+# For example, you can run a backup of all your user accounts
+# at 5 a.m every week with:
+# 0 5 * * 1 tar -zcf /var/backups/home.tgz /home/
+#
+# For more information see the manual pages of crontab(5) and cron(8)
+#
+# m h  dom mon dow   command
+* * * * * /home/kambeysan/Documents/GBEducation/Linux_WS/lesson_06/script_bkp.sh
+
+kambeysan@Akano-EZpad:~/Documents/GBEducation/Linux_WS/lesson_06/BackUp$ ll	#- проверка...
+total 12
+drwxr-xr-x  3 kambeysan kambeysan 4096 Jun 16 18:36 ./
+drwxr-xr-x  4 kambeysan kambeysan 4096 Jun 16 18:35 ../
+drwxr-xr-x 74 kambeysan kambeysan 4096 Jun 16 18:38 etc/	#- работает!
+
