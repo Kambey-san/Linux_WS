@@ -1,0 +1,297 @@
+Урок 7. Управление пакетами и репозиториями. Основы сетевой безопасности
+
+1. Подключить репозиторий с nginx любым удобным способом, установить nginx и потом удалить
+nginx, используя утилиту dpkg.
+
+kambeysan@Akano-EZpad:~$ sudo apt purge nginx	#- удаляет пакет и очищает все связанные с ним файлы конфигурации. 
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+Package 'nginx' is not installed, so not removed	#- пакета нет
+0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+kambeysan@Akano-EZpad:~$ sudo apt-add-repository ppa:nginx/stable	#- добавление репозитория nginx
+...
+E: The repository 'https://ppa.launchpadcontent.net/nginx/stable/ubuntu jammy Release' does not have a Release file.
+N: Updating from such a repository can't be done securely, and is therefore disabled by default.
+N: See apt-secure(8) manpage for repository creation and user configuration details.
+
+kambeysan@Akano-EZpad:~$ cd /etc/apt/sources.list.d/	#- переход в директорию sources.list.d/
+total 12
+drwxr-xr-x 2 root root 4096 Jun 19 13:10 ./
+drwxr-xr-x 8 root root 4096 Jun 19 12:56 ../
+-rw-r--r-- 1 root root  144 Jun 19 13:10 nginx-ubuntu-stable-jammy.list		#- искомый файл автоматически создан
+kambeysan@Akano-EZpad:/etc/apt/sources.list.d$ cat nginx-ubuntu-stable-jammy.list	#- содержимое Ок!
+deb https://ppa.launchpadcontent.net/nginx/stable/ubuntu/ jammy main
+# deb-src https://ppa.launchpadcontent.net/nginx/stable/ubuntu/ jammy main
+kambeysan@Akano-EZpad:/etc/apt/sources.list.d$ sudo apt install nginx		#- инсталлируем nginx
+kambeysan@Akano-EZpad:/etc/apt/sources.list.d$ sudo service nginx start		#- запускаем nginx
+kambeysan@Akano-EZpad:/etc/apt/sources.list.d$ sudo service nginx status	#- проверяем nginx	
+● nginx.service - A high performance web server and a reverse proxy server
+     Loaded: loaded (/lib/systemd/system/nginx.service; enabled; vendor preset: enabled)
+     Active: active (running) since Mon 2023-06-19 13:19:28 MSK; 7min ago
+       Docs: man:nginx(8)
+    Process: 4580 ExecStartPre=/usr/sbin/nginx -t -q -g daemon on; master_process on; (code=exited, status=0/SUCCESS)
+    Process: 4581 ExecStart=/usr/sbin/nginx -g daemon on; master_process on; (code=exited, status=0/SUCCESS)
+   Main PID: 4677 (nginx)
+      Tasks: 5 (limit: 3396)
+     Memory: 6.2M
+     CGroup: /system.slice/nginx.service
+             ├─4677 "nginx: master process /usr/sbin/nginx -g daemon on; master_process on;"
+             ├─4680 "nginx: worker process" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" ""
+             ├─4681 "nginx: worker process" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" ""
+             ├─4682 "nginx: worker process" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" ""
+             └─4683 "nginx: worker process" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" ""
+
+Jun 19 13:19:28 Akano-EZpad systemd[1]: Starting A high performance web server and a reverse proxy server...
+Jun 19 13:19:28 Akano-EZpad systemd[1]: Started A high performance web server and a reverse proxy server.	#- всё ОК!
+
+kambeysan@Akano-EZpad:/etc/apt/sources.list.d$ cd ~
+kambeysan@Akano-EZpad:~$ sudo dpkg -l	#- смотрим, что есть и что отключать...
+Desired=Unknown/Install/Remove/Purge/Hold
+| Status=Not/Inst/Conf-files/Unpacked/halF-conf/Half-inst/trig-aWait/Trig-pend
+|/ Err?=(none)/Reinst-required (Status,Err: uppercase=bad)
+||/ Name                           Version                                 Architecture Description
++++-==============================-=======================================-============-========================================================>ii 
+
+...
+ii  nginx                          1.18.0-6ubuntu14.3                      amd64        small, powerful, scalable web/proxy server
+ii  nginx-common                   1.18.0-6ubuntu14.3                      all          small, powerful, scalable web/proxy server - common files
+ii  nginx-core                     1.18.0-6ubuntu14.3                      amd64        nginx web/proxy server (standard version)
+...
+
+kambeysan@Akano-EZpad:~$ sudo service nginx stop	#- останавливаем nginx
+kambeysan@Akano-EZpad:~$ sudo service nginx status	#- проверяем nginx
+○ nginx.service - A high performance web server and a reverse proxy server
+     Loaded: loaded (/lib/systemd/system/nginx.service; enabled; vendor preset: enabled)
+     Active: inactive (dead) since Mon 2023-06-19 13:43:48 MSK; 13s ago
+       Docs: man:nginx(8)
+    Process: 4580 ExecStartPre=/usr/sbin/nginx -t -q -g daemon on; master_process on; (code=exited, status=0/SUCCESS)
+    Process: 4581 ExecStart=/usr/sbin/nginx -g daemon on; master_process on; (code=exited, status=0/SUCCESS)
+    Process: 4756 ExecStop=/sbin/start-stop-daemon --quiet --stop --retry QUIT/5 --pidfile /run/nginx.pid (code=exited, status=0/SUCCESS)
+   Main PID: 4677 (code=exited, status=0/SUCCESS)
+
+Jun 19 13:19:28 Akano-EZpad systemd[1]: Starting A high performance web server and a reverse proxy server...
+Jun 19 13:19:28 Akano-EZpad systemd[1]: Started A high performance web server and a reverse proxy server.
+Jun 19 13:43:48 Akano-EZpad systemd[1]: Stopping A high performance web server and a reverse proxy server...
+Jun 19 13:43:48 Akano-EZpad systemd[1]: nginx.service: Deactivated successfully.
+Jun 19 13:43:48 Akano-EZpad systemd[1]: Stopped A high performance web server and a reverse proxy server.	#- Ок!
+kambeysan@Akano-EZpad:~$ sudo dpkg --remove nginx	#- удаляем...
+(Reading database ... 27788 files and directories currently installed.)
+Removing nginx (1.18.0-6ubuntu14.3) ...
+kambeysan@Akano-EZpad:~$ sudo dpkg --remove nginx-common
+dpkg: dependency problems prevent removal of nginx-common:
+ nginx-core depends on nginx-common (= 1.18.0-6ubuntu14.3).
+ libnginx-mod-stream-geoip2 depends on nginx-common (= 1.18.0-6ubuntu14.3).
+ libnginx-mod-stream depends on nginx-common (= 1.18.0-6ubuntu14.3).
+ libnginx-mod-mail depends on nginx-common (= 1.18.0-6ubuntu14.3).
+ libnginx-mod-http-xslt-filter depends on nginx-common (= 1.18.0-6ubuntu14.3).
+ libnginx-mod-http-image-filter depends on nginx-common (= 1.18.0-6ubuntu14.3).
+ libnginx-mod-http-geoip2 depends on nginx-common (= 1.18.0-6ubuntu14.3).
+
+dpkg: error processing package nginx-common (--remove):
+ dependency problems - not removing
+Errors were encountered while processing:
+ nginx-common
+kambeysan@Akano-EZpad:~$ sudo dpkg --remove nginx-core
+(Reading database ... 27785 files and directories currently installed.)
+Removing nginx-core (1.18.0-6ubuntu14.3) ...
+Processing triggers for man-db (2.10.2-1) ...
+
+****
+kambeysan@Akano-EZpad:~$ sudo dpkg -l	#- проверяем...
+Desired=Unknown/Install/Remove/Purge/Hold
+| Status=Not/Inst/Conf-files/Unpacked/halF-conf/Half-inst/trig-aWait/Trig-pend
+|/ Err?=(none)/Reinst-required (Status,Err: uppercase=bad)
+||/ Name                           Version                                 Architecture Description
++++-==============================-=======================================-============-===========================================================>
+...
+ri  nginx-common                   1.18.0-6ubuntu14.3                      all          small, powerful, scalable web/proxy server - common files
+...
+# - один остался...
+
+kambeysan@Akano-EZpad:~$ sudo apt purge nginx	#- добьём...
+Reading package lists... Done
+Reading state information... Done
+Package 'nginx' is not installed, so not removed
+The following packages will be REMOVED:
+  fontconfig-config fonts-dejavu-core libdeflate0 libfontconfig1 libfreetype6 libgd3 libjbig0 libjpeg-turbo8 libjpeg8 libnginx-mod-http-geoip2
+  libnginx-mod-http-image-filter libnginx-mod-http-xslt-filter libnginx-mod-mail libnginx-mod-stream libnginx-mod-stream-geoip2 libtiff5 libwebp7
+  libxpm4 libxslt1.1 nginx-common
+0 upgraded, 0 newly installed, 20 to remove and 0 not upgraded.
+After this operation, 8387 kB disk space will be freed.
+Do you want to continue? [Y/n] y
+(Reading database ... 27780 files and directories currently installed.)
+Removing libnginx-mod-http-image-filter (1.18.0-6ubuntu14.3) ...
+Removing libgd3:amd64 (2.3.0-2ubuntu2) ...
+Removing libfontconfig1:amd64 (2.13.1-4.2ubuntu5) ...
+Removing fontconfig-config (2.13.1-4.2ubuntu5) ...
+Removing fonts-dejavu-core (2.37-2build1) ...
+Removing libtiff5:amd64 (4.3.0-6ubuntu0.4) ...
+Removing libdeflate0:amd64 (1.10-2) ...
+Removing libfreetype6:amd64 (2.11.1+dfsg-1ubuntu0.2) ...
+Removing libjbig0:amd64 (2.1-3.1ubuntu0.22.04.1) ...
+Removing libjpeg8:amd64 (8c-2ubuntu10) ...
+Removing libjpeg-turbo8:amd64 (2.1.2-0ubuntu1) ...
+Removing libnginx-mod-http-geoip2 (1.18.0-6ubuntu14.3) ...
+Removing libnginx-mod-http-xslt-filter (1.18.0-6ubuntu14.3) ...
+Removing libnginx-mod-mail (1.18.0-6ubuntu14.3) ...
+Removing libnginx-mod-stream-geoip2 (1.18.0-6ubuntu14.3) ...
+Removing libnginx-mod-stream (1.18.0-6ubuntu14.3) ...
+Removing libwebp7:amd64 (1.2.2-2ubuntu0.22.04.1) ...
+Removing libxpm4:amd64 (1:3.5.12-1ubuntu0.22.04.1) ...
+Removing libxslt1.1:amd64 (1.1.34-4ubuntu0.22.04.1) ...
+Removing nginx-common (1.18.0-6ubuntu14.3) ...
+Processing triggers for man-db (2.10.2-1) ...
+Processing triggers for libc-bin (2.35-0ubuntu3.1) ...
+kambeysan@Akano-EZpad:~$ sudo apt purge nginx
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+Package 'nginx' is not installed, so not removed
+0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+kambeysan@Akano-EZpad:/etc/apt/sources.list.d$ sudo rm -r nginx-ubuntu-stable-jammy.list	#- удаляем мусор...
+
+2. Установить пакет на свой выбор, используя snap.
+kambeysan@Akano-EZpad:~$ sudo rm -Rf /usr/bin/firefox	#- удаляем символическую ссылку /usr/bin/firefox
+kambeysan@Akano-EZpad:~$ sudo rm -Rf /usr/loca/firefox	#- удаляем папку /usr/loca/firefox
+kambeysan@Akano-EZpad:~$ sudo snap remove firefox	#- удаляем snap пакет
+firefox removed
+kambeysan@Akano-EZpad:~$ sudo apt update && sudo apt upgrade -y		#- обновляемся...
+Hit:1 http://security.ubuntu.com/ubuntu jammy-security InRelease
+Hit:2 http://archive.ubuntu.com/ubuntu jammy InRelease
+Hit:3 http://archive.ubuntu.com/ubuntu jammy-updates InRelease
+Get:4 http://archive.ubuntu.com/ubuntu jammy-backports InRelease [108 kB]
+Fetched 108 kB in 1s (78.1 kB/s)
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+All packages are up to date.
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+Calculating upgrade... Done
+0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+kambeysan@Akano-EZpad:~$ sudo snap install firefox	#- устанавливаем firefox!
+firefox 114.0.1-1 from Mozilla✓ installed	#- Ok!
+kambeysan@Akano-EZpad:~$ cd snap/
+kambeysan@Akano-EZpad:~/snap$ tree
+.
+└── firefox
+    ├── 2760
+    ├── common
+    │   ├── Desktop
+    │   ├── Documents -> /home/kambeysan/Documents
+    │   ├── Downloads
+    │   ├── Music
+    │   ├── Pictures
+    │   ├── Public
+    │   ├── Templates
+    │   └── Videos
+    └── current -> 2760
+
+12 directories, 0 files
+
+
+3. Настроить iptables: разрешить подключения только на 22-й и 80-й порты.
+kambeysan@Akano-EZpad:~$ sudo service ssh start
+kambeysan@Akano-EZpad:~$ sudo service ssh status
+● ssh.service - OpenBSD Secure Shell server
+     Loaded: loaded (/lib/systemd/system/ssh.service; enabled; vendor preset: enabled)
+     Active: active (running) since Mon 2023-06-19 14:43:02 MSK; 40min ago
+       Docs: man:sshd(8)
+             man:sshd_config(5)
+   Main PID: 256 (sshd)
+      Tasks: 1 (limit: 3396)
+     Memory: 6.2M
+     CGroup: /system.slice/ssh.service
+             └─256 "sshd: /usr/sbin/sshd -D [listener] 0 of 10-100 startups"
+
+Jun 19 14:43:02 Akano-EZpad systemd[1]: Starting OpenBSD Secure Shell server...
+Jun 19 14:43:02 Akano-EZpad sshd[256]: Server listening on 0.0.0.0 port 22.
+Jun 19 14:43:02 Akano-EZpad sshd[256]: Server listening on :: port 22.
+Jun 19 14:43:02 Akano-EZpad systemd[1]: Started OpenBSD Secure Shell server.
+kambeysan@Akano-EZpad:~$ sudo iptables -S
+-P INPUT ACCEPT
+-P FORWARD ACCEPT
+-P OUTPUT ACCEPT
+kambeysan@Akano-EZpad:~$ sudo ufw status
+Status: inactive
+kambeysan@Akano-EZpad:~$ sudo apt-get install ufw
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+ufw is already the newest version (0.36.1-4build1).
+0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+kambeysan@Akano-EZpad:~$ sudo ufw allow 22
+Skipping adding existing rule
+Skipping adding existing rule (v6)
+kambeysan@Akano-EZpad:~$ sudo ufw allow 80
+Skipping adding existing rule
+Skipping adding existing rule (v6)
+
+PuTYY:
+login as: kambeysan
+kambeysan@172.21.16.19's password:
+Welcome to Ubuntu 22.04.2 LTS (GNU/Linux 5.15.90.1-microsoft-standard-WSL2 x86_6                                                                                        4)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+ * Strictly confined Kubernetes makes edge and IoT secure. Learn how MicroK8s
+   just raised the bar for easy, resilient and secure K8s cluster deployment.
+
+   https://ubuntu.com/engage/secure-kubernetes-at-the-edge
+Last login: Mon Jun 19 14:43:08 2023
+kambeysan@Akano-EZpad:~$ whoami
+kambeysan
+kambeysan@Akano-EZpad:~$ uname
+Linux
+kambeysan@Akano-EZpad:~$ sudo ufw status
+[sudo] password for kambeysan:
+Status: inactive
+kambeysan@Akano-EZpad:~$ sudo ufw allow 22
+Skipping adding existing rule
+Skipping adding existing rule (v6)
+kambeysan@Akano-EZpad:~$ sudo ufw allow 80
+Skipping adding existing rule
+Skipping adding existing rule (v6)
+kambeysan@Akano-EZpad:~$ sudo ufw enable
+Command may disrupt existing ssh connections. Proceed with operation (y|n)? Y
+Firewall is active and enabled on system startup
+kambeysan@Akano-EZpad:~$ sudo ufw status
+Status: active
+
+To                         Action      From
+--                         ------      ----
+22                         ALLOW       Anywhere
+80                         ALLOW       Anywhere
+22 (v6)                    ALLOW       Anywhere (v6)
+80 (v6)                    ALLOW       Anywhere (v6)
+
+
+4. Настроить проброс портов локально с порта 80 на порт 8080.
+
+kambeysan@Akano-EZpad:~$ sudo sysctl -w net.ipv4.ip_forward=1
+net.ipv4.ip_forward = 1
+kambeysan@Akano-EZpad:~$ iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 8080
+iptables v1.8.7 (nf_tables): unknown option "--dport"
+Try `iptables -h' or 'iptables --help' for more information.	#- sudo забыл!
+kambeysan@Akano-EZpad:~$ sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 8080
+kambeysan@Akano-EZpad:~$ sudo iptables -t nat -L	#- всё ок!
+Chain PREROUTING (policy ACCEPT)
+target     prot opt source               destination
+REDIRECT   tcp  --  anywhere             anywhere             tcp dpt:http redir ports 8080
+
+Chain INPUT (policy ACCEPT)
+target     prot opt source               destination
+
+Chain OUTPUT (policy ACCEPT)
+target     prot opt source               destination
+
+Chain POSTROUTING (policy ACCEPT)
+target     prot opt source               destination
+
+
+
+
