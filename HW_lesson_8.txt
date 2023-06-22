@@ -1,0 +1,132 @@
+Урок 8. Введение в Docker
+
+1. Переустановить операционную систему (по желанию, для дополнительной практики)
+#Было:
+kambeysan@kambeysan-VirtualBox:~$ hostnamectl
+ Static hostname: kambeysan-VirtualBox
+       Icon name: computer-vm
+         Chassis: vm
+      Machine ID: aa4cd26cfaea465e9084a6f7bdd84efd
+         Boot ID: 81a412d91ea74e7f9252bc93f2b6a96e
+  Virtualization: oracle
+Operating System: Ubuntu 22.04.2 LTS              
+          Kernel: Linux 5.19.0-43-generic
+    Architecture: x86-64
+ Hardware Vendor: innotek GmbH
+  Hardware Model: VirtualBox
+#Стало:
+kambeysan@Akano-EZpad:~$ hostnamectl
+ Static hostname: Akano-EZpad
+       Icon name: computer-container
+         Chassis: container
+      Machine ID: db4e3cce1baa41669813adc05c380f7d
+         Boot ID: 668401e3075b402e817ff4f2aa43b2a9
+  Virtualization: wsl
+Operating System: Ubuntu 22.04.2 LTS
+          Kernel: Linux 5.15.90.1-microsoft-standard-WSL2
+    Architecture: x86-64
+PS C:\Users\Pc> wsl -l -v
+  NAME                   STATE           VERSION
+* Ubuntu                 Running         2
+  docker-desktop         Stopped         2
+  docker-desktop-data    Stopped         2
+
+2. Подключить репозиторий Docker.
+kambeysan@Akano-EZpad:~$ docker --version
+Docker version 24.0.2, build cb74dfc
+
+3. Запустить контейнер с Ubuntu.
+
+kambeysan@Akano-EZpad:~$ docker ps	#- список контейнеров
+CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+kambeysan@Akano-EZpad:~$ sudo docker run ubuntu		#- пробуем запустить контейнер ubuntu
+Unable to find image 'ubuntu:latest' locally	#- локально нет...
+latest: Pulling from library/ubuntu
+6b851dcae6ca: Pull complete
+Digest: sha256:6120be6a2b7ce665d0cbddc3ce6eae60fe94637c6a66985312d1f02f63cc0bcd
+Status: Downloaded newer image for ubuntu:latest	#- загрузили с хаба
+kambeysan@Akano-EZpad:~$ sudo docker ps -a 	#- (ключик -a обязательно!)
+CONTAINER ID   IMAGE     COMMAND       CREATED         STATUS                     PORTS     NAMES
+2dd581ca3e1b   ubuntu    "/bin/bash"   3 minutes ago   Exited (0) 3 minutes ago             adoring_bouman	#- Ok!
+
+
+4. * Используя Dockerfile, собрать связку nginx + PHP-FPM в одном контейнере.
+kambeysan@Akano-EZpad:~/Documents/GBEducation/Linux_WS/lesson_08$ cat >dockerfile	#- создаю файл
+FROM ubuntu:latest
+MAINTAINER kambeysan
+RUN apt update
+RUN apt install nginx -y
+RUN apt install php-fpm -y
+EXPOSE 80
+CMD /usr/sbin/nginx -g "daemon off;"
+kambeysan@Akano-EZpad:~/Documents/GBEducation/Linux_WS/lesson_08$ sudo docker build -t nginx-php-fpm .	#- собираем образ... 
+#...затык:
+ => [4/4] RUN apt-get install php8.1-fpm -y                                                                      176.1s
+ => => # Please select the geographic area in which you live. Subsequent configuration
+ => => # questions will narrow this down by presenting a list of cities, representing
+ => => # the time zones in which they are located.
+ => => #   1. Africa   3. Antarctica  5. Arctic  7. Atlantic  9. Indian    11. US
+ => => #   2. America  4. Australia   6. Asia    8. Europe    10. Pacific  12. Etc
+ => => # Geographic area:
+
+# меняю файл с уточнением и добавлением данных: 
+kambeysan@Akano-EZpad:~/Documents/GBEducation/Linux_WS/lesson_08$ nano dockerfile
+FROM ubuntu:22.04
+MAINTAINER kambeysan
+ENV TZ=Europe/Moscow
+RUN apt-get update
+RUN apt-get install nginx -y
+RUN apt-get install php8.1-fpm -y
+EXPOSE 80
+CMD /usr/sbin/nginx -g "daemon off;"
+kambeysan@Akano-EZpad:~/Documents/GBEducation/Linux_WS/lesson_08$ sudo docker build -t nginx-php-fpm .	#- собираем образ(попытка №2)... 
+#...затык:
+ => [4/4] RUN apt-get install php8.1-fpm -y                                                                      566.6s
+ => => # Please select the geographic area in which you live. Subsequent configuration
+ => => # questions will narrow this down by presenting a list of cities, representing
+ => => # the time zones in which they are located.
+ => => #   1. Africa   3. Antarctica  5. Arctic  7. Atlantic  9. Indian    11. US
+ => => #   2. America  4. Australia   6. Asia    8. Europe    10. Pacific  12. Etc
+ => => # Geographic area:
+kambeysan@Akano-EZpad:~/Documents/GBEducation/Linux_WS/lesson_08$ nano dockerfile
+FROM ubuntu:22.04
+MAINTAINER kambeysan
+RUN apt-get update && apt-get install -y tzdata		#- добавляем строчку...
+ENV TZ=Europe/Moscow
+RUN apt-get update
+RUN apt-get install nginx -y
+RUN apt-get install php8.1-fpm -y
+EXPOSE 80
+CMD /usr/sbin/nginx -g "daemon off;"
+kambeysan@Akano-EZpad:~/Documents/GBEducation/Linux_WS/lesson_08$ sudo docker build -t nginx-php-fpm .	#- собираем образ(попытка №3)... 
+[+] Building 187.3s (9/9) FINISHED
+ => [internal] load build definition from dockerfile                                                               0.0s
+ => => transferring dockerfile: 276B                                                                               0.0s
+ => [internal] load .dockerignore                                                                                  0.1s
+ => => transferring context: 2B                                                                                    0.0s
+ => [internal] load metadata for docker.io/library/ubuntu:22.04                                                    2.7s
+ => CACHED [1/5] FROM docker.io/library/ubuntu:22.04@sha256:6120be6a2b7ce665d0cbddc3ce6eae60fe94637c6a66985312d1f  0.0s
+ => [2/5] RUN apt-get update && apt-get install -y tzdata                                                         27.9s
+ => [3/5] RUN apt-get update                                                                                       4.8s
+ => [4/5] RUN apt-get install nginx -y                                                                            42.8s
+ => [5/5] RUN apt-get install php8.1-fpm -y                                                                      103.9s
+ => exporting to image                                                                                             4.7s
+ => => exporting layers                                                                                            4.6s
+ => => writing image sha256:fcaadfcdd8f7ca11857654dd7b2d6a107390e017e1f1b1ba176c2117ba4a5df0                       0.0s
+ => => naming to docker.io/library/nginx-php-fpm
+kambeysan@Akano-EZpad:~/Documents/GBEducation/Linux_WS/lesson_08$ sudo docker run -d --name nginx-php-fpm -p 80:80 nginx-php-fpm:latest		#- запуск в фоне
+87ca49353ba7c14a368b81fb01405580dc9f8d1ee3717ccdc32c6d0d80126c7f	#- Ok!
+docker: Error response from daemon: Ports are not available: exposing port TCP 0.0.0.0:80 -> 0.0.0.0:0: listen tcp 0.0.0.0:80: bind: An attempt was made to access a socket in a way forbidden by its access permissions.	#- порты не пробросились ((
+kambeysan@Akano-EZpad:~/Documents/GBEducation/Linux_WS/lesson_08$ sudo lsof -i :80	#- порт свободен...
+
+*****
+kambeysan@Akano-EZpad:~/Documents/GBEducation/Linux_WS/lesson_08$ docker ps -a		#- удалось! (нужно обновить контейнер в Win Docker)
+CONTAINER ID   IMAGE                  COMMAND                  CREATED             STATUS                      PORTS                NAMES
+acdacb4f5d04   ubuntu                 "/bin/bash"              50 minutes ago      Exited (0) 47 minutes ago                        distracted_haibt
+3edbd1784762   nginx-php-fpm:latest   "/bin/sh -c '/usr/sb…"   About an hour ago   Up About a minute           0.0.0.0:80->80/tcp   nginx-php-fpm
+af96b84a05c4   ubuntu                 "/bin/bash"              4 hours ago         Exited (0) 4 hours ago                           eager_snyder
+2dd581ca3e1b   ubuntu                 "/bin/bash"              8 hours ago         Exited (0) 5 hours ago                           adoring_bouman
+
+
+
+
